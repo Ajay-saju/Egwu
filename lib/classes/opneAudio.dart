@@ -1,23 +1,23 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:egvu/songsList/songList.dart';
+
 
 class OpenAudioPlayer {
-  MusicList musics = MusicList();
+  List<Audio> musicList;
   int? index;
 
-  OpenAudioPlayer({required this.index});
+  OpenAudioPlayer({required this.index,required this.musicList});
   final AssetsAudioPlayer myAudio = AssetsAudioPlayer.withId('0');
   openAssetPlayer() {
     final songIndex = index;
     myAudio.open(
         Playlist(
-          audios: musics.music,
+          audios: musicList,
           startIndex: songIndex!,
         ),
         showNotification: true,
         autoStart: true,
         headPhoneStrategy: HeadPhoneStrategy.pauseOnUnplug,
-        playInBackground: PlayInBackground.enabled, 
+        playInBackground: PlayInBackground.enabled,
         notificationSettings: const NotificationSettings(
           stopEnabled: false,
         ));

@@ -6,23 +6,23 @@ import 'package:egvu/Favourite/favourites.dart';
 import 'package:egvu/playlist/playList.dart';
 import 'package:egvu/search/search.dart';
 import 'package:egvu/settigs/settings.dart';
-import 'package:egvu/songsList/songList.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class MainScreen extends StatefulWidget {
-  // List<Audio> musicList =[];
-  const MainScreen({
-    Key? key,
-  }) : super(key: key);
+  List<Audio>? finalSong = [];
+  MainScreen({Key? key,required this.finalSong}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  MusicList musics = MusicList();
-  var music = MusicList();
+  OnAudioQuery audioQuery = OnAudioQuery();
+  
+ 
   final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer.withId('0');
   Audio find(List<Audio> source, String fromPath) {
     return source.firstWhere((element) => element.path == fromPath);
@@ -37,7 +37,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(),
+      HomeScreen(
+        finalMusic: widget.finalSong!,
+      ),
       const FavouritesScreen(),
       const Search(),
       const PlayList(),
@@ -66,11 +68,13 @@ class _MainScreenState extends State<MainScreen> {
               alignment: Alignment.bottomCenter,
               child: audioPlayer.builderCurrent(builder: (context, playing) {
                 final myAudio =
-                    find(musics.music, playing.audio.assetAudioPath);
+                    find(widget.finalSong!, playing.audio.assetAudioPath);
 
                 return GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => PlayBackWidget())),
+                      builder: (context) => PlayBackWidget(
+                            finalSong: widget.finalSong!,
+                          ))),
                   child: Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -82,10 +86,11 @@ class _MainScreenState extends State<MainScreen> {
                               width: 45.w,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.r),
-                                child: Image(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        myAudio.metas.image!.path)),
+                                child: QueryArtworkWidget(id: int.parse(myAudio.metas.id!), type:ArtworkType.AUDIO)
+                                // Image(
+                                //     fit: BoxFit.cover,
+                                //     image: NetworkImage(
+                                //         myAudio.metas.image!.path)),
                               )),
                         ),
                         SizedBox(

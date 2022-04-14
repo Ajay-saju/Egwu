@@ -3,23 +3,20 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:egvu/PlayWidget/customePlayBackWidget.dart';
 import 'package:egvu/classes/opneAudio.dart';
+
 import 'package:egvu/mainScreen/mainScren.dart';
-import 'package:egvu/songsList/songList.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:on_audio_query/on_audio_query.dart';
+
 class HomeScreen extends StatefulWidget {
-  // String? title;
-  // String? artist;
-  // // String? imagePath;
-  // String? audioPath;
+  List<Audio> finalMusic = [];
 
   HomeScreen({
     Key? key,
-    // required this.title,
-    // required this.artist,
-    // required this.imagePath,
-    // required this.audioPath
+    required this.finalMusic,
   }) : super(key: key);
 
   @override
@@ -31,11 +28,15 @@ bool visible = false;
 
 class _HomeScreenState extends State<HomeScreen> {
   // late AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
+  OnAudioQuery audioQuery = OnAudioQuery();
+
   final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer.withId("0");
-  MusicList music = MusicList();
 
   @override
   Widget build(BuildContext context) {
+    // final  box = Hive.box<LocalSongs>(boxName).values.toList();
+    // box[0].
+
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -61,121 +62,150 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 20.h,
                   ),
-                  ListView.builder(
-                    controller: ScrollController(),
-                    shrinkWrap: true,
-                    itemExtent: 60.h,
-                    itemCount: music.music.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      songIndex = index;
+                  FutureBuilder<List<SongModel>>(
+                      future: audioQuery.querySongs(
+                        uriType: UriType.EXTERNAL,
+                        sortType: null,
+                        orderType: OrderType.ASC_OR_SMALLER,
+                        ignoreCase: true,
+                      ),
+                      builder: (context, item) {
+                        if (widget.finalMusic.isEmpty) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (widget.finalMusic.isEmpty) {
+                          return const Text('No Songs Found');
+                        }
 
-                      return ListTile(
-                        onTap: () async {
-                          OpenAudioPlayer(index: index).openAssetPlayer();
-                          setState(() {
-                            visible = true;
-                          });
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (ctx) => const MainScreen()),
-                              (route) => false);
+                        return ListView.builder(
+                          controller: ScrollController(),
+                          shrinkWrap: true,
+                          itemExtent: 60.h,
+                          itemCount: widget.finalMusic.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            songIndex = index;
 
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PlayBackWidget()));
-                        },
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(5.r),
-                          child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                  minWidth: 51.w,
-                                  maxWidth: 51.w,
-                                  minHeight: 50.h,
-                                  maxHeight: 50.h),
-                              child: Image.network(
-                                music.music[index].metas.image!.path,
-                                fit: BoxFit.cover,
-                              )),
-                        ),
-                        title: music.music[index].metas.title != null
-                            ? Text(
-                                music.music[index].metas.title!,
+                            return ListTile(
+                              onTap: () async {
+                                OpenAudioPlayer(
+                                        index: index,
+                                        musicList: widget.finalMusic)
+                                    .openAssetPlayer();
+                                setState(() {
+                                  visible = true;
+                                });
+                                // print(widget.finalMusic[4].metas.id.toString());
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (ctx) => MainScreen(
+                                              finalSong: widget.finalMusic,
+                                            )),
+                                    (route) => false);
+
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PlayBackWidget(
+                                        finalSong: widget.finalMusic)));
+                              },
+
+                              leading: ClipRRect(
+                                child: QueryArtworkWidget(
+                                    artworkWidth: 41.w,
+                                    artworkHeight: 50.w,
+                                    id: int.parse(widget
+                                        .finalMusic[index].metas.id
+                                        .toString()),
+                                    artworkBorder: BorderRadius.circular(3.r),
+                                    artworkFit: BoxFit.cover,
+                                    type: ArtworkType.AUDIO),
+                              ),
+                              // ),
+                              // leading:
+                              title: Text(
+                                widget.finalMusic[index].metas.title!,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Regular',
                                     fontSize: 11.sp,
                                     color: Colors.white),
-                              )
-                            : Text(
-                                '<Unknown>',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Regular',
-                                    fontSize: 11.sp,
-                                    color: Colors.white),
                               ),
-                        subtitle: music.music[index].metas.artist != null
-                            ? Text(
-                                music.music[index].metas.artist!,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Regular',
-                                    fontSize: 10.sp,
-                                    color: Colors.white70),
-                              )
-                            : Text(
-                                '<Unknown>',
+                              // : Text(
+                              //     '<Unknown>',
+                              //     overflow: TextOverflow.ellipsis,
+                              //     style: TextStyle(
+                              //         fontFamily: 'Poppins-Regular',
+                              //         fontSize: 11.sp,
+                              //         color: Colors.white),
+                              //   ),
+
+                              // title: Text(item.data![index].displayNameWOExt),
+                              subtitle: Text(
+                                widget.finalMusic[index].metas.artist!,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Regular',
                                     fontSize: 10.sp,
                                     color: Colors.white70),
                               ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.favorite_outline,
-                              size: 15.sp,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: 8.w),
-                            PopupMenuButton(
-                              child: Icon(
-                                Icons.more_vert,
-                                size: 18.sp,
-                                color: Colors.white,
-                              ),
-                              color: Colors.black,
-                              itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  child: Column(
-                                    children: [
-                                      TextButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            'Add to Playlist',
-                                            style: TextStyle(
-                                                color: Colors.white70,
-                                                fontFamily: 'Poppins-Regular'),
-                                          )),
-                                      TextButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            'Delete Song',
-                                            style: TextStyle(
-                                                color: Colors.white70,
-                                                fontFamily: 'Poppins-Regular'),
-                                          ))
+                              // : Text(
+                              //     '<Unknown>',
+                              //     overflow: TextOverflow.ellipsis,
+                              //     style: TextStyle(
+                              //         fontFamily: 'Poppins-Regular',
+                              //         fontSize: 10.sp,
+                              //         color: Colors.white70),
+                              //   ),
+                              // subtitle: Text("${item.data![index].artist}"),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.favorite_outline,
+                                    size: 15.sp,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  PopupMenuButton(
+                                    child: Icon(
+                                      Icons.more_vert,
+                                      size: 18.sp,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.black,
+                                    itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                        child: Column(
+                                          children: [
+                                            TextButton(
+                                                onPressed: () {},
+                                                child: const Text(
+                                                  'Add to Playlist',
+                                                  style: TextStyle(
+                                                      color: Colors.white70,
+                                                      fontFamily:
+                                                          'Poppins-Regular'),
+                                                )),
+                                            TextButton(
+                                                onPressed: () {},
+                                                child: const Text(
+                                                  'Delete Song',
+                                                  style: TextStyle(
+                                                      color: Colors.white70,
+                                                      fontFamily:
+                                                          'Poppins-Regular'),
+                                                ))
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      })
                 ],
               ),
             )),

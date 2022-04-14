@@ -1,34 +1,31 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:egvu/mainScreen/mainScren.dart';
-import 'package:egvu/songsList/songList.dart';
+
+
+import 'package:egvu/spashScreen/splashScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:marquee/marquee.dart';
-// import 'package:marquee/marquee.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class PlayBackWidget extends StatefulWidget {
-  // List<Audio> musicList = [];
-
-  // int musicIndex;
-  // String pathId;
-
+  List<Audio> finalSong;
   PlayBackWidget({
     Key? key,
-    // required this.musicList,
-    // required this.musicIndex,
-    // required this.pathId,
+    required this.finalSong,
   }) : super(key: key);
 
   @override
   State<PlayBackWidget> createState() => _PlayBackWidgetState();
 }
 
-bool? isPlayingSong;
+// bool? isPlayingSong;
 
 class _PlayBackWidgetState extends State<PlayBackWidget> {
-  MusicList musics = MusicList();
+  // final  box = Hive.box<LocalSongs>(boxName).values.toList();
+  // box[0].
+  // MusicList musics = MusicList();
+
   AssetsAudioPlayer? audioPlayer = AssetsAudioPlayer.withId('0');
 
   Audio find(List<Audio> source, String fromPath) {
@@ -53,7 +50,8 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
           backgroundColor: Colors.transparent,
           body:
               audioPlayer!.builderCurrent(builder: (context, Playing? playing) {
-            final myAudio = find(musics.music, playing!.audio.assetAudioPath);
+            final myAudio =
+                find(widget.finalSong, playing!.audio.assetAudioPath);
 
             return SafeArea(
                 child: Column(
@@ -84,13 +82,22 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                     ],
                   ),
                 ),
+                // if(widget.finalSong !=null){
+
+
                 Container(
                     height: 250.h,
                     width: 200.w,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(myAudio.metas.image!.path),
-                            fit: BoxFit.contain))),
+                    child:QueryArtworkWidget(id: int.parse(myAudio.metas.id!), type: ArtworkType.AUDIO) ,
+                    // decoration: BoxDecoration(
+                    //     image: myAudio.metas.image != null
+                    //         ? DecorationImage(
+                    //             image: ,
+                    //             fit: BoxFit.contain)
+                    //         : const DecorationImage(
+                    //             image: AssetImage('asset/OSOD.gif'),
+                    //             fit: BoxFit.contain))
+                                ),
                 SizedBox(
                   height: 5.h,
                 ),
