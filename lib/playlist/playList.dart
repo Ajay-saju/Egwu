@@ -1,6 +1,8 @@
+import 'package:egvu/PlaylistView/playListVIew.dart';
+import 'package:egvu/database/hiveModelClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 
 class PlayList extends StatefulWidget {
   const PlayList({Key? key}) : super(key: key);
@@ -10,6 +12,32 @@ class PlayList extends StatefulWidget {
 }
 
 class _PlayListState extends State<PlayList> {
+  late TextEditingController controller;
+  String playListName = '';
+
+  final excistingPlaylist = SnackBar(
+    content: const Text(
+      'This playlist name already exists',
+      style: TextStyle(color: Colors.white),
+    ),
+    backgroundColor: Colors.grey[900],
+  );
+
+  final box = Boxes.getInstance();
+  List playlists = [];
+
+  @override
+  void initState() {
+    controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,70 +52,30 @@ class _PlayListState extends State<PlayList> {
         ),
       ),
       child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 70,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Padding(
+            padding: EdgeInsets.all(10.r),
+            child: Text(
+              'Playlist',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.sp,
+                  fontFamily: 'Poppins-Regular'),
+            ),
+          ),
+        ),
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: SafeArea(
               child: Padding(
-            padding: EdgeInsets.all(20.w),
+            padding: EdgeInsets.all(20.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Playlist',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.sp,
-                      fontFamily: 'Poppins-Regular'),
-                ),
-
-                SizedBox(
-                  height: 20.h,
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 50.h, left: 20.w),
-                    child: Text(
-                      'My Mood',
-                      style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16.sp,
-                          fontFamily: 'Poppins-Regular'),
-                    ),
-                  ),
-                  width: 600.w,
-                  height: 110.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                        image: AssetImage('asset/pop.jpg'), fit: BoxFit.fill),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 50.h, left: 20.w),
-                    child: Text(
-                      'Chill Vibe',
-                      style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16.sp,
-                          fontFamily: 'Poppins-Regular'),
-                    ),
-                  ),
-                  width: 600.w,
-                  height: 110.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                        image: AssetImage('asset/headphones_2.jpg'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
+                
                 Container(
                   child: Padding(
                     padding: EdgeInsets.only(top: 50.h, left: 20.w),
@@ -114,7 +102,9 @@ class _PlayListState extends State<PlayList> {
                                         fontFamily: 'Poppins-Regular'),
                                   ),
                                   content: TextFormField(
-                                    initialValue: 'Playlist name',
+                                    controller: controller,
+                                    autofocus: true,
+                                    // initialValue: 'Playlist name',
                                     style: const TextStyle(
                                         color: Colors.white70,
                                         fontFamily: 'Poppins-Regular'),
@@ -132,7 +122,8 @@ class _PlayListState extends State<PlayList> {
                                         )),
                                     TextButton(
                                         onPressed: () {
-                                          setState(() {});
+                                          // selectImageBottumsheet(context);
+                                          playListCreated();
                                         },
                                         child: const Text(
                                           'Create',
@@ -158,14 +149,96 @@ class _PlayListState extends State<PlayList> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                        image: AssetImage('asset/createPlaylist.jpg'),
+                        image: AssetImage(
+                            'asset/PlayListImages/createPlaylist.jpg'),
                         fit: BoxFit.fill),
                   ),
                 ),
+                SizedBox(
+                  height: 20.h,
+                ),
+
+                Expanded(
+                  
+                  child: ValueListenableBuilder(
+                      valueListenable: box.listenable(),
+                      builder: (context, boxes, _) {
+                        playlists = box.keys.toList();
+                        return ListView.builder(
+                            shrinkWrap: false,
+                            itemCount: playlists.length,
+                            itemBuilder: (context, index) {
+                              return playlists[index] != 'songs'
+                                  ? ListTile(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PlaylistScreen(
+                                                      playlistName:
+                                                          playlists[index],
+                                                    )));
+                                      },
+                                      leading: Icon(
+                                        Icons.playlist_play_rounded,
+                                        size: 25.sp,
+                                      ),
+                                      title: Text(
+                                        playlists[index].toString(),
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontFamily: 'Poppins-Regular',
+                                        ),
+                                      ),
+                                      trailing: PopupMenuButton(
+                                          icon: const Icon(
+                                            Icons.more_vert_rounded,
+                                            color: Colors.white,
+                                          ),
+                                          itemBuilder: (context) => [
+                                                const PopupMenuItem(
+                                                  child:
+                                                      Text('Remove playlist'),
+                                                  value: "0",
+                                                ),
+                                              ],
+                                          onSelected: (value) {
+                                            if (value == "0") {
+                                              box.delete(playlists[index]);
+                                              setState(() {
+                                                playlists = box.keys.toList();
+                                              });
+                                            }
+                                          }))
+                                  : Container();
+                            });
+                      }),
+                )
+
                 // ListView.builder(
                 //     shrinkWrap: true,
                 //     itemBuilder: (BuildContext context, int index) {
-                //       return const Card();
+                //       return Container(
+                //         child: Padding(
+                //           padding: EdgeInsets.only(top: 50.h, left: 20.w),
+                //           child: Text(
+                //             'My Mood',
+                //             style: TextStyle(
+                //                 color: Colors.white70,
+                //                 fontSize: 16.sp,
+                //                 fontFamily: 'Poppins-Regular'),
+                //           ),
+                //         ),
+                //         width: 600.w,
+                //         height: 110.w,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10),
+                //           image: const DecorationImage(
+                //               image: AssetImage('asset/PlayListImages/pop.jpg'),
+                //               fit: BoxFit.fill),
+                //         ),
+                //       );
                 //     }),
               ],
             ),
@@ -174,4 +247,32 @@ class _PlayListState extends State<PlayList> {
       ),
     );
   }
+
+  playListCreated() {
+    playListName = controller.text;
+    List<LocalSongs> librerary = [];
+    List? exsistingName = [];
+    if (playlists.isNotEmpty) {
+      exsistingName =
+          playlists.where((element) => element == playListName).toList();
+    }
+    if (playListName != '' && exsistingName.isEmpty) {
+      box.put(playListName, librerary);
+      Navigator.of(context).pop();
+      setState(() {
+        playlists = box.keys.toList();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(excistingPlaylist);
+    }
+    controller.clear();
+  }
 }
+
+// List<String> myImage = [
+//   'asset/PlayListImages/headphones_2.jpg',
+//   'asset/PlayListImages/pop.jpg',
+//   'asset/o-kadhal-kanmani-movie-poster.jpg',
+//   'asset/Trance_film_poster.jpg',
+//   'asset/Mahaan-feat.jpg',
+// ];

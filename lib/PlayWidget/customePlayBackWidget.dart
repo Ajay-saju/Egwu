@@ -1,19 +1,16 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 
-
-import 'package:egvu/spashScreen/splashScreen.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:marquee/marquee.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class PlayBackWidget extends StatefulWidget {
   List<Audio> finalSong;
-  PlayBackWidget({
-    Key? key,
-    required this.finalSong,
-  }) : super(key: key);
+  int? index;
+  PlayBackWidget({Key? key, required this.finalSong, this.index})
+      : super(key: key);
 
   @override
   State<PlayBackWidget> createState() => _PlayBackWidgetState();
@@ -47,6 +44,27 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
               end: Alignment.bottomCenter,
               colors: [Color(0xffffffff), Color(0xffbfbfc1)])),
       child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Now playing',
+              style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 18.sp,
+                  fontFamily: 'Poppins-Regular'),
+            ),
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 30.sp,
+                  color: Colors.grey[600],
+                )),
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
           backgroundColor: Colors.transparent,
           body:
               audioPlayer!.builderCurrent(builder: (context, Playing? playing) {
@@ -56,65 +74,50 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
             return SafeArea(
                 child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.all(20.r),
-                  child: Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 30.sp,
-                            color: Colors.grey[600],
-                          )),
-                      SizedBox(
-                        width: 40.w,
-                      ),
-                      Text(
-                        'Now playing',
-                        style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 18.sp,
-                            fontFamily: 'Poppins-Regular'),
-                      ),
-                    ],
+                // if(widget.finalSong !=null){
+                SizedBox(
+                  height: 40.h,
+                ),
+                SizedBox(
+                  height: 200.h,
+                  width: 200.h,
+                  child: QueryArtworkWidget(
+                      // artworkColor: Colors.black,
+                      artworkBorder: BorderRadius.circular(3.r),
+                      nullArtworkWidget:
+                          const Image(image: AssetImage('asset/nullPlay.gif')),
+                      id: int.parse(myAudio.metas.id!),
+                      artworkFit: BoxFit.fill,
+                      type: ArtworkType.AUDIO),
+                ),
+                SizedBox(
+                  height: 50.h,
+                ),
+
+                SizedBox(
+                  height: 40.h,
+                  width: 200.h,
+                  child: Marquee(
+                    text: myAudio.metas.title!,
+                    scrollAxis: Axis.horizontal,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    blankSpace: 20.0,
+                    velocity: 50.0,
+                    pauseAfterRound: const Duration(seconds: 1),
+                    startPadding: 5.0,
+                    accelerationDuration: const Duration(seconds: 1),
+                    accelerationCurve: Curves.linear,
+                    decelerationDuration: const Duration(milliseconds: 500),
+                    decelerationCurve: Curves.easeOut,
+                    style: TextStyle(
+                        fontSize: 18.sp, fontFamily: 'Poppins-regular'),
                   ),
                 ),
-                // if(widget.finalSong !=null){
 
-
-                Container(
-                    height: 250.h,
-                    width: 200.w,
-                    child:QueryArtworkWidget(id: int.parse(myAudio.metas.id!), type: ArtworkType.AUDIO) ,
-                    // decoration: BoxDecoration(
-                    //     image: myAudio.metas.image != null
-                    //         ? DecorationImage(
-                    //             image: ,
-                    //             fit: BoxFit.contain)
-                    //         : const DecorationImage(
-                    //             image: AssetImage('asset/OSOD.gif'),
-                    //             fit: BoxFit.contain))
-                                ),
-                SizedBox(
-                  height: 5.h,
-                ),
                 SizedBox(
                     width: 200.w,
                     child: Column(
                       children: [
-                        Text(
-                          myAudio.metas.title!,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontFamily: 'Poppins-regular',
-                          ),
-                        ),
                         Text(
                           myAudio.metas.artist!,
                           maxLines: 1,
@@ -129,9 +132,9 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                     )),
                 SizedBox(
                   height: 150.h,
-                  width: 200.w,
+                  // width: 200.w,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -162,33 +165,39 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                         height: 10.h,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconButton(
-                              onPressed: () {
+                          GestureDetector(
+                              onTap: () {
                                 audioPlayer!.previous();
                               },
-                              icon: Icon(
+                              child: Icon(
                                 Icons.skip_previous_rounded,
                                 size: 40.sp,
                               )),
+                          SizedBox(
+                            width: 40.w,
+                          ),
                           PlayerBuilder.isPlaying(
                               player: audioPlayer!,
                               builder: (context, isPlaying) {
-                                return IconButton(
-                                    onPressed: () async {
+                                return GestureDetector(
+                                    onTap: () async {
                                       await audioPlayer!.playOrPause();
                                     },
-                                    icon: Icon(
+                                    child: Icon(
                                       isPlaying ? iconPause : iconPlay,
                                       size: 40.sp,
                                     ));
                               }),
-                          IconButton(
-                            onPressed: () {
+                          SizedBox(
+                            width: 40.w,
+                          ),
+                          GestureDetector(
+                            onTap: () {
                               audioPlayer!.next();
                             },
-                            icon: Icon(
+                            child: Icon(
                               Icons.skip_next_rounded,
                               size: 40.sp,
                             ),

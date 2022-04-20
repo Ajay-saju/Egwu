@@ -7,12 +7,12 @@ class OpenAudioPlayer {
 
   OpenAudioPlayer({required this.index,required this.musicList});
   final AssetsAudioPlayer myAudio = AssetsAudioPlayer.withId('0');
-  openAssetPlayer() {
+  openAssetPlayer({List<Audio>?audios,required int index})async {
     final songIndex = index;
     myAudio.open(
         Playlist(
           audios: musicList,
-          startIndex: songIndex!,
+          startIndex: songIndex,
         ),
         showNotification: true,
         autoStart: true,

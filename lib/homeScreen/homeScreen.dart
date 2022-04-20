@@ -44,24 +44,29 @@ class _HomeScreenState extends State<HomeScreen> {
               end: Alignment.bottomCenter,
               colors: [Color(0xff393372), Color(0xffbfbfc1)])),
       child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 70,
+            title: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Your music',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.sp,
+                    fontFamily: 'Poppins-Regular'),
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
           backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
             child: SafeArea(
                 child: Padding(
-              padding: EdgeInsets.all(20.r),
+              padding: EdgeInsets.all(10.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Your music',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.sp,
-                        fontFamily: 'Poppins-Regular'),
-                  ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
                   FutureBuilder<List<SongModel>>(
                       future: audioQuery.querySongs(
                         uriType: UriType.EXTERNAL,
@@ -92,11 +97,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 OpenAudioPlayer(
                                         index: index,
                                         musicList: widget.finalMusic)
-                                    .openAssetPlayer();
+                                    .openAssetPlayer(index: index);
                                 setState(() {
                                   visible = true;
                                 });
-                                // print(widget.finalMusic[4].metas.id.toString());
+                                
+
+                               
+
+                                Future.delayed(const Duration(seconds: 4));
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                         builder: (ctx) => MainScreen(
@@ -104,21 +113,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                             )),
                                     (route) => false);
 
-                                Navigator.of(context).push(MaterialPageRoute(
+                                    Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PlayBackWidget(
                                         finalSong: widget.finalMusic)));
                               },
 
                               leading: ClipRRect(
                                 child: QueryArtworkWidget(
-                                    artworkWidth: 41.w,
-                                    artworkHeight: 50.w,
-                                    id: int.parse(widget
-                                        .finalMusic[index].metas.id
-                                        .toString()),
-                                    artworkBorder: BorderRadius.circular(3.r),
-                                    artworkFit: BoxFit.cover,
-                                    type: ArtworkType.AUDIO),
+                                  artworkWidth: 41.w,
+                                  artworkHeight: 50.w,
+                                  id: int.parse(widget
+                                      .finalMusic[index].metas.id
+                                      .toString()),
+                                  nullArtworkWidget: Image(
+                                    image:
+                                        const AssetImage('asset/nullMusic.png'),
+                                    width: 41.w,
+                                  ),
+                                  artworkBorder: BorderRadius.circular(3.r),
+                                  artworkFit: BoxFit.cover,
+                                  type: ArtworkType.AUDIO,
+                                ),
                               ),
                               // ),
                               // leading:
@@ -130,16 +145,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize: 11.sp,
                                     color: Colors.white),
                               ),
-                              // : Text(
-                              //     '<Unknown>',
-                              //     overflow: TextOverflow.ellipsis,
-                              //     style: TextStyle(
-                              //         fontFamily: 'Poppins-Regular',
-                              //         fontSize: 11.sp,
-                              //         color: Colors.white),
-                              //   ),
+                              
 
-                              // title: Text(item.data![index].displayNameWOExt),
+                            
                               subtitle: Text(
                                 widget.finalMusic[index].metas.artist!,
                                 overflow: TextOverflow.ellipsis,
@@ -148,15 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize: 10.sp,
                                     color: Colors.white70),
                               ),
-                              // : Text(
-                              //     '<Unknown>',
-                              //     overflow: TextOverflow.ellipsis,
-                              //     style: TextStyle(
-                              //         fontFamily: 'Poppins-Regular',
-                              //         fontSize: 10.sp,
-                              //         color: Colors.white70),
-                              //   ),
-                              // subtitle: Text("${item.data![index].artist}"),
+                              
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -205,7 +205,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         );
-                      })
+                      }),
+                  SizedBox(
+                    height: 100.h,
+                  )
                 ],
               ),
             )),
