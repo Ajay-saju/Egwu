@@ -1,4 +1,3 @@
-
 import 'package:egvu/database/hiveModelClass.dart';
 
 import 'package:egvu/spashScreen/splashScreen.dart';
@@ -11,6 +10,16 @@ Future main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(LocalSongsAdapter());
   await Hive.openBox<List>(boxName);
+
+
+  final box = Boxes.getInstance();
+
+
+  List<dynamic> favkeys = box.keys.toList();
+  if (!favkeys.contains('favourites')) {
+    List<dynamic> likedsongs = [];
+    await box.put('favourites', likedsongs);
+  }
 
   runApp(const MyApp());
 }

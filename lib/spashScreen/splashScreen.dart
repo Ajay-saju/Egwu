@@ -22,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     splash();
     fetchSong();
+    
     super.initState();
     Permission.storage.request();
   }
@@ -75,15 +76,25 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    // box.close();
-    super.dispose();
+  
+  splash() async {
+    await Future.delayed(const Duration(seconds: 5));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: ((context) => MainScreen(
+              finalSong: finalSongs,
+            ))));
   }
+
+  // @override
+  // void dispose() {
+  //   // box.close();
+  //   super.dispose();
+  // }
+
 
   @override
   Widget build(BuildContext context) {
-//
+
 
     return Scaffold(
       backgroundColor: const Color(0xff3e3e66),
@@ -101,11 +112,4 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  splash() async {
-    await Future.delayed(const Duration(seconds: 5));
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: ((context) => MainScreen(
-              finalSong: finalSongs,
-            ))));
-  }
 }

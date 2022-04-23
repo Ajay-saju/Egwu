@@ -15,11 +15,11 @@ class _BuildSheetState extends State<BuildSheet> {
   final box = Boxes.getInstance();
   List<LocalSongs> dbSongs = [];
   List<LocalSongs> playlistSongs = [];
-  // @override
-  // void initState() {
-  //   getSongs();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    getSongs();
+    super.initState();
+  }
 
   getSongs() async {
     dbSongs = box.get("songs") as List<LocalSongs>;

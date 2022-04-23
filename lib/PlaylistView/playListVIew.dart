@@ -4,8 +4,9 @@ import 'package:egvu/PlaylistView/CustomWidget/buildSheet.dart';
 import 'package:egvu/classes/opneAudio.dart';
 import 'package:egvu/database/hiveModelClass.dart';
 import 'package:egvu/mainScreen/mainScren.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -122,6 +123,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                           index: index, musicList: playPlayList)
                                       .openAssetPlayer(
                                           index: index, audios: playPlayList);
+
+                                      //     Navigator.push(
+                                      // context,
+                                      // MaterialPageRoute(
+                                      //     builder: (context) => MainScreen(
+                                      //           finalSong: playPlayList,
+                                      //         )));
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -130,12 +138,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                           index: index,
                                         ),
                                       ));
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => MainScreen(
-                                  //               finalSong: playPlayList,
-                                  //             )));
+                                  
                                 },
                                 child: ListTile(
                                   leading: SizedBox(

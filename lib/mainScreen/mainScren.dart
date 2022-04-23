@@ -41,184 +41,171 @@ class _MainScreenState extends State<MainScreen> {
         finalMusic: widget.finalSong!,
       ),
       const FavouritesScreen(),
-      const Search(),
+      Search(
+        fullSongs: widget.finalSong!,
+      ),
       const PlayList(),
       const SettingsScreen(),
     ];
 
     return Scaffold(
-      body: Stack(
-        children: [
-          ValueListenableBuilder(
-            valueListenable: indexChaingeNotifier,
-            builder: (context, int index, _) {
-              return screens[index];
-            },
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Visibility(
-              visible: visibleOf!,
-              child: SizedBox(
-                height: 70.h,
-                width: double.infinity,
-                child: Align(
-                    alignment: Alignment.center,
-                    child:
-                        audioPlayer.builderCurrent(builder: (context, playing) {
-                      final myAudio =
-                          find(widget.finalSong!, playing.audio.assetAudioPath);
+      body: ValueListenableBuilder(
+        valueListenable: indexChaingeNotifier,
+        builder: (context, int index, _) {
+          return screens[index];
+        },
+      ),
 
-                      return GestureDetector(
-                        onTap: () =>
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => PlayBackWidget(
-                                      finalSong: widget.finalSong!, 
-                                    ))),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.r),
-                          child: Row(
+      
+      bottomSheet: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      PlayBackWidget(finalSong: widget.finalSong!)));
+        },
+        child: Container(
+          color: Colors.transparent,
+          height: 70.h,
+          width: double.infinity,
+          child: Align(
+              alignment: Alignment.center,
+              child: audioPlayer.builderCurrent(builder: (context, playing) {
+                final myAudio =
+                    find(widget.finalSong!, playing.audio.assetAudioPath);
+
+                return GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => PlayBackWidget(
+                            finalSong: widget.finalSong!,
+                          ))),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.r),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                            height: 40.w,
+                            width: 40.w,
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5.r),
+                                child: QueryArtworkWidget(
+                                    nullArtworkWidget: const Image(
+                                        image: AssetImage('asset/OSOD.gif')),
+                                    id: int.parse(myAudio.metas.id!),
+                                    type: ArtworkType.AUDIO)
+                                // Image(
+                                //     fit: BoxFit.cover,
+                                //     image: NetworkImage(
+                                //         myAudio.metas.image!.path)),
+                                )),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                  height: 40.w,
-                                  width: 40.w,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5.r),
-                                      child: QueryArtworkWidget(
-                                          nullArtworkWidget:const Image(
-                                              image:
-                                                  AssetImage('asset/OSOD.gif')),
-                                          id: int.parse(myAudio.metas.id!),
-                                          type: ArtworkType.AUDIO)
-                                      // Image(
-                                      //     fit: BoxFit.cover,
-                                      //     image: NetworkImage(
-                                      //         myAudio.metas.image!.path)),
-                                      )),
-                              SizedBox(
-                                width: 10.w,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                // height: 40.h,
+                                // width: 200.h,
+                                height: 15.h,
+                                width: 150.h,
+                                child: Marquee(
+                                  text: myAudio.metas.title!,
+                                  scrollAxis: Axis.horizontal,
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      // height: 40.h,
-                                      // width: 200.h,
-                                      height: 15.h,
-                                      width: 150.h,
-                                      child: Marquee(
-                                        text: myAudio.metas.title!,
-                                        scrollAxis: Axis.horizontal,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        blankSpace: 20.0,
-                                        velocity: 20.0,
-                                        pauseAfterRound:
-                                            const Duration(seconds: 1),
-                                        startPadding: 5.0,
-                                        accelerationDuration:
-                                            const Duration(seconds: 1),
-                                        accelerationCurve: Curves.linear,
-                                        decelerationDuration:
-                                            const Duration(milliseconds: 500),
-                                        decelerationCurve: Curves.easeOut,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 9.sp,
-                                            fontFamily: 'Poppins-regular'),
-                                      ),
-                                    ),
-                                    // Text(
-                                    //   myAudio.metas.title!,
-                                    //   style: TextStyle(
-                                    //       fontFamily: 'Poppins-Regular',
-                                    //       fontWeight: FontWeight.w600,
-                                    //       fontSize: 9.sp,
-                                    //       color: Colors.black),
-                                    // ),
-                                    SizedBox(
-                                      height: 1.h,
-                                    ),
-
-                                    Text(
-                                      myAudio.metas.artist!,
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins-Regular',
-                                          fontSize: 8.sp,
-                                          color: Colors.black),
-                                    ),
-                                  ],
+                                  blankSpace: 20.0,
+                                  velocity: 20.0,
+                                  pauseAfterRound: const Duration(seconds: 1),
+                                  startPadding: 5.0,
+                                  accelerationDuration:
+                                      const Duration(seconds: 1),
+                                  accelerationCurve: Curves.linear,
+                                  decelerationDuration:
+                                      const Duration(milliseconds: 500),
+                                  decelerationCurve: Curves.easeOut,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 9.sp,
+                                      fontFamily: 'Poppins-regular'),
                                 ),
                               ),
-                              Expanded(
-                                flex: 2,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          audioPlayer.previous();
-                                        },
-                                        child: Icon(
-                                          Icons.skip_previous_rounded,
-                                          size: 30.sp,
-                                        )),
-                                    PlayerBuilder.isPlaying(
-                                        player: audioPlayer,
-                                        builder: (context, isPlaying) {
-                                          return GestureDetector(
-                                              onTap: () async {
-                                                await audioPlayer.playOrPause();
-                                              },
-                                              child: Icon(
-                                                isPlaying
-                                                    ? iconPause
-                                                    : iconPlay,
-                                                size: 30.sp,
-                                              ));
-                                        }),
-                                    GestureDetector(
-                                        onTap: () {
-                                          audioPlayer.next();
-                                        },
-                                        child: Icon(
-                                          Icons.skip_next_rounded,
-                                          size: 30.sp,
-                                        )),
-                                  ],
-                                ),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              Text(
+                                myAudio.metas.artist!,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Regular',
+                                    fontSize: 8.sp,
+                                    color: Colors.black),
                               ),
                             ],
                           ),
-                          height: 60.h,
-                          width: 270.w,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.topCenter,
-                                colors: [
-                                  Color(0xff30313a),
-                                  Color(0xffbfbfc1),
-                                ]),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
-                            color: Colors.grey[200],
-                            shape: BoxShape.rectangle,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    audioPlayer.previous();
+                                  },
+                                  child: Icon(
+                                    Icons.skip_previous_rounded,
+                                    size: 30.sp,
+                                  )),
+                              PlayerBuilder.isPlaying(
+                                  player: audioPlayer,
+                                  builder: (context, isPlaying) {
+                                    return GestureDetector(
+                                        onTap: () async {
+                                          await audioPlayer.playOrPause();
+                                        },
+                                        child: Icon(
+                                          isPlaying ? iconPause : iconPlay,
+                                          size: 30.sp,
+                                        ));
+                                  }),
+                              GestureDetector(
+                                  onTap: () {
+                                    audioPlayer.next();
+                                  },
+                                  child: Icon(
+                                    Icons.skip_next_rounded,
+                                    size: 30.sp,
+                                  )),
+                            ],
                           ),
                         ),
-                      );
-                    })),
-              ),
-            ),
-          ),
-        ],
+                      ],
+                    ),
+                    height: 60.h,
+                    width: 270.w,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Color(0xff30313a),
+                            Color(0xffbfbfc1),
+                          ]),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      color: Colors.grey[200],
+                      shape: BoxShape.rectangle,
+                    ),
+                  ),
+                );
+              })),
+        ),
       ),
 
-      // bottomSheet: Container(height: 200.h,width: 200.w, child:Container(child: Text('my bottum sheet ')) ,),
 
+      
       bottomNavigationBar: const MyBottumNavBar(),
     );
   }

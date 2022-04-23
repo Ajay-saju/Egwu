@@ -39,6 +39,8 @@ dependencies:
   marquee: ^2.2.1
   on_audio_query: ^2.6.0
   permission_handler: ^9.2.0
+  share_plus: ^4.0.4
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   build_runner: ^2.1.8

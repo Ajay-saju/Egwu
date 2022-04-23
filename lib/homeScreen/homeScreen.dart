@@ -27,16 +27,14 @@ int? songIndex;
 bool visible = false;
 
 class _HomeScreenState extends State<HomeScreen> {
-  // late AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
+ 
   OnAudioQuery audioQuery = OnAudioQuery();
 
   final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer.withId("0");
 
   @override
   Widget build(BuildContext context) {
-    // final  box = Hive.box<LocalSongs>(boxName).values.toList();
-    // box[0].
-
+   
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -47,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             toolbarHeight: 70,
             title: Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10.r),
               child: Text(
                 'Your music',
                 style: TextStyle(
@@ -101,19 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 setState(() {
                                   visible = true;
                                 });
-                                
-
                                
 
-                                Future.delayed(const Duration(seconds: 4));
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (ctx) => MainScreen(
-                                              finalSong: widget.finalMusic,
-                                            )),
-                                    (route) => false);
-
-                                    Navigator.of(context).push(MaterialPageRoute(
+                                Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PlayBackWidget(
                                         finalSong: widget.finalMusic)));
                               },
@@ -145,9 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize: 11.sp,
                                     color: Colors.white),
                               ),
-                              
 
-                            
                               subtitle: Text(
                                 widget.finalMusic[index].metas.artist!,
                                 overflow: TextOverflow.ellipsis,
@@ -156,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize: 10.sp,
                                     color: Colors.white70),
                               ),
-                              
+
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [

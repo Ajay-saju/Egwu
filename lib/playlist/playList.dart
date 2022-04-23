@@ -68,182 +68,178 @@ class _PlayListState extends State<PlayList> {
           ),
         ),
         backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: SafeArea(
-              child: Padding(
-            padding: EdgeInsets.all(20.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 50.h, left: 20.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Create Playlist',
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16.sp,
-                              fontFamily: 'Poppins-Regular'),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  backgroundColor: Colors.black,
-                                  title: const Text(
-                                    'Create playlist',
-                                    style: TextStyle(
-                                        color: Colors.white70,
-                                        fontFamily: 'Poppins-Regular'),
-                                  ),
-                                  content: TextFormField(
-                                    controller: controller,
-                                    autofocus: true,
-                                    // initialValue: 'Playlist name',
-                                    style: const TextStyle(
-                                        color: Colors.white70,
-                                        fontFamily: 'Poppins-Regular'),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                              color: Colors.white70,
-                                              fontFamily: 'Poppins-Regular'),
-                                        )),
-                                    TextButton(
-                                        onPressed: () {
-                                          // selectImageBottumsheet(context);
-                                          playListCreated();
-                                        },
-                                        child: const Text(
-                                          'Create',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins-Regular'),
-                                        ))
-                                  ],
+        body: SafeArea(
+            child: Padding(
+          padding: EdgeInsets.all(20.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 50.h, left: 20.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Create Playlist',
+                        style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16.sp,
+                            fontFamily: 'Poppins-Regular'),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                backgroundColor: Colors.black,
+                                title: const Text(
+                                  'Create playlist',
+                                  style: TextStyle(
+                                      color: Colors.white70,
+                                      fontFamily: 'Poppins-Regular'),
                                 ),
-                              );
-                            },
-                            child: Text(
-                              'Add',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins-Regular',
-                                  fontSize: 12.sp,
-                                  color: Colors.white),
-                            ))
-                      ],
-                    ),
-                  ),
-                  width: 600.w,
-                  height: 110.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                        image: AssetImage(
-                            'asset/PlayListImages/createPlaylist.jpg'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
-
-                Expanded(
-                  
-                  child: ValueListenableBuilder(
-                      valueListenable: box.listenable(),
-                      builder: (context, boxes, _) {
-                        playlists = box.keys.toList();
-                        return ListView.builder(
-                            shrinkWrap: false,
-                            itemCount: playlists.length,
-                            itemBuilder: (context, index) {
-                              return playlists[index] != 'songs'
-                                  ? ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PlaylistScreen(
-                                                      playlistName:
-                                                          playlists[index],
-                                                    )));
+                                content: TextFormField(
+                                  controller: controller,
+                                  autofocus: true,
+                                  // initialValue: 'Playlist name',
+                                  style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontFamily: 'Poppins-Regular'),
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
                                       },
-                                      leading: Icon(
-                                        Icons.playlist_play_rounded,
-                                        size: 25.sp,
-                                      ),
-                                      title: Text(
-                                        playlists[index].toString(),
+                                      child: const Text(
+                                        'Cancel',
                                         style: TextStyle(
-                                          fontSize: 20.sp,
-                                          fontFamily: 'Poppins-Regular',
-                                        ),
-                                      ),
-                                      trailing: PopupMenuButton(
-                                          icon: const Icon(
-                                            Icons.more_vert_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          itemBuilder: (context) => [
-                                                const PopupMenuItem(
-                                                  child:
-                                                      Text('Remove playlist'),
-                                                  value: "0",
-                                                ),
-                                              ],
-                                          onSelected: (value) {
-                                            if (value == "0") {
-                                              box.delete(playlists[index]);
-                                              setState(() {
-                                                playlists = box.keys.toList();
-                                              });
-                                            }
-                                          }))
-                                  : Container();
-                            });
-                      }),
-                )
+                                            color: Colors.white70,
+                                            fontFamily: 'Poppins-Regular'),
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+                                        // selectImageBottumsheet(context);
+                                        playListCreated();
+                                      },
+                                      child: const Text(
+                                        'Create',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Regular'),
+                                      ))
+                                ],
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Add',
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Regular',
+                                fontSize: 12.sp,
+                                color: Colors.white),
+                          ))
+                    ],
+                  ),
+                ),
+                width: 600.w,
+                height: 110.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: const DecorationImage(
+                      image:
+                          AssetImage('asset/PlayListImages/createPlaylist.jpg'),
+                      fit: BoxFit.fill),
+                ),
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
 
-                // ListView.builder(
-                //     shrinkWrap: true,
-                //     itemBuilder: (BuildContext context, int index) {
-                //       return Container(
-                //         child: Padding(
-                //           padding: EdgeInsets.only(top: 50.h, left: 20.w),
-                //           child: Text(
-                //             'My Mood',
-                //             style: TextStyle(
-                //                 color: Colors.white70,
-                //                 fontSize: 16.sp,
-                //                 fontFamily: 'Poppins-Regular'),
-                //           ),
-                //         ),
-                //         width: 600.w,
-                //         height: 110.w,
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(10),
-                //           image: const DecorationImage(
-                //               image: AssetImage('asset/PlayListImages/pop.jpg'),
-                //               fit: BoxFit.fill),
-                //         ),
-                //       );
-                //     }),
-              ],
-            ),
-          )),
-        ),
+              Expanded(
+                child: ValueListenableBuilder(
+                    valueListenable: box.listenable(),
+                    builder: (context, boxes, _) {
+                      playlists = box.keys.toList();
+                      return ListView.builder(
+                          shrinkWrap: false,
+                          itemCount: playlists.length,
+                          itemBuilder: (context, index) {
+                            return playlists[index] != 'songs'
+                                ? ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PlaylistScreen(
+                                                    playlistName:
+                                                        playlists[index],
+                                                  )));
+                                    },
+                                    leading: Icon(
+                                      Icons.playlist_play_rounded,
+                                      color: Colors.black,
+                                      size: 25.sp,
+                                    ),
+                                    title: Text(
+                                      playlists[index].toString(),
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontFamily: 'Poppins-Regular',
+                                      ),
+                                    ),
+                                    trailing: PopupMenuButton(
+                                        icon: const Icon(
+                                          Icons.more_vert_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        itemBuilder: (context) => [
+                                              const PopupMenuItem(
+                                                child: Text('Remove playlist'),
+                                                value: "0",
+                                              ),
+                                            ],
+                                        onSelected: (value) {
+                                          if (value == "0") {
+                                            box.delete(playlists[index]);
+                                            setState(() {
+                                              playlists = box.keys.toList();
+                                            });
+                                          }
+                                        }))
+                                : Container();
+                          });
+                    }),
+              )
+
+              // ListView.builder(
+              //     shrinkWrap: true,
+              //     itemBuilder: (BuildContext context, int index) {
+              //       return Container(
+              //         child: Padding(
+              //           padding: EdgeInsets.only(top: 50.h, left: 20.w),
+              //           child: Text(
+              //             'My Mood',
+              //             style: TextStyle(
+              //                 color: Colors.white70,
+              //                 fontSize: 16.sp,
+              //                 fontFamily: 'Poppins-Regular'),
+              //           ),
+              //         ),
+              //         width: 600.w,
+              //         height: 110.w,
+              //         decoration: BoxDecoration(
+              //           borderRadius: BorderRadius.circular(10),
+              //           image: const DecorationImage(
+              //               image: AssetImage('asset/PlayListImages/pop.jpg'),
+              //               fit: BoxFit.fill),
+              //         ),
+              //       );
+              //     }),
+            ],
+          ),
+        )),
       ),
     );
   }
