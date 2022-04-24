@@ -44,4 +44,5 @@ class MyApp extends StatelessWidget {
       designSize: const Size(286.86614173, 619.84251969),
     );
   }
+  
 }

@@ -49,39 +49,29 @@ class _MainScreenState extends State<MainScreen> {
     ];
 
     return Scaffold(
-      body: ValueListenableBuilder(
-        valueListenable: indexChaingeNotifier,
-        builder: (context, int index, _) {
-          return screens[index];
-        },
-      ),
+      body: Stack(
+        children: [
+          ValueListenableBuilder(
+            valueListenable: indexChaingeNotifier,
+            builder: (context, int index, _) {
+              return screens[index];
+            },
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: audioPlayer.builderCurrent(builder: (context, playing) {
+              final myAudio =
+                  find(widget.finalSong!, playing.audio.assetAudioPath);
 
-      
-      bottomSheet: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      PlayBackWidget(finalSong: widget.finalSong!)));
-        },
-        child: Container(
-          color: Colors.transparent,
-          height: 70.h,
-          width: double.infinity,
-          child: Align(
-              alignment: Alignment.center,
-              child: audioPlayer.builderCurrent(builder: (context, playing) {
-                final myAudio =
-                    find(widget.finalSong!, playing.audio.assetAudioPath);
-
-                return GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => PlayBackWidget(
-                            finalSong: widget.finalSong!,
-                          ))),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.r),
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.r),
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => PlayBackWidget(
+                              finalSong: widget.finalSong!,
+                            ))),
                     child: Row(
                       children: [
                         SizedBox(
@@ -184,28 +174,27 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                       ],
                     ),
-                    height: 60.h,
-                    width: 270.w,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Color(0xff30313a),
-                            Color(0xffbfbfc1),
-                          ]),
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      color: Colors.grey[200],
-                      shape: BoxShape.rectangle,
-                    ),
                   ),
-                );
-              })),
-        ),
+                  height: 60.h,
+                  width: 270.w,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Color(0xff30313a),
+                          Color(0xffbfbfc1),
+                        ]),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    color: Colors.grey[200],
+                    shape: BoxShape.rectangle,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
       ),
-
-
-      
       bottomNavigationBar: const MyBottumNavBar(),
     );
   }
