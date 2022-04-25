@@ -1,4 +1,5 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:egvu/Favourite/customeContainer/musicList.dart';
 
 import 'package:egvu/PlayWidget/customePlayBackWidget.dart';
 import 'package:egvu/classes/opneAudio.dart';
@@ -30,9 +31,6 @@ int? songIndex;
 bool visible = false;
 
 class _HomeScreenState extends State<HomeScreen> {
-  LocalSongs? temp;
-
-  String? songId;
   final box = Boxes.getInstance();
   List<LocalSongs> dbSongs = [];
   List<Audio> fullSongs = [];
@@ -43,8 +41,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    LocalSongs? temp;
+
+    String songId = '';
     dbSongs = box.get('songs') as List<LocalSongs>;
     List? favourites = box.get('favourites');
+
+    temp = databaseSongs(dbSongs, songId);
 
     return Container(
       decoration: const BoxDecoration(
@@ -101,11 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (BuildContext context, int index) {
                             songIndex = index;
 
-                            songId = widget.finalMusic[songIndex!].metas.id
-                                .toString();
-
-                            temp = databaseSongs(dbSongs, songId!);
-
                             return ListTile(
                               onTap: () async {
                                 OpenAudioPlayer(
@@ -119,6 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PlayBackWidget(
                                         finalSong: widget.finalMusic)));
+
+                                songId = widget.finalMusic[index].metas.id
+                                    .toString();
                               },
 
                               leading: ClipRRect(
@@ -158,118 +159,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: Colors.white70),
                               ),
 
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.favorite_outline,
-                                      size: 15.sp,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  PopupMenuButton(
-                                    child: Icon(
-                                      Icons.more_vert,
-                                      size: 18.sp,
-                                      color: Colors.white,
-                                    ),
-                                    color: Colors.black,
-                                    itemBuilder: (contet) => [
-                                      favourites!
-                                              .where((element) =>
-                                                  element.id.toString() ==
-                                                  temp!.id.toString())
-                                              .isEmpty
-                                          ? PopupMenuItem(
-                                              onTap: () {
-                                                favourites.add(temp);
-                                                box.put(
-                                                    'favourites', favourites);
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                        const SnackBar(
-                                                            content: Text(
-                                                  'This Song Added to favorites',
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          'Poppins-Regular'),
-                                                )));
-                                              },
-                                              child: const Text(
-                                                'Add to Favaourites',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontFamily:
-                                                        'Poppins-Regular'),
-                                              ))
-                                          : PopupMenuItem(
-                                              onTap: () {
-                                                favourites.removeWhere(
-                                                    (element) =>
-                                                        element.id.toString() ==
-                                                        temp!.id.toString());
-                                                box.put(
-                                                    'favourites', favourites);
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                        const SnackBar(
-                                                            content: Text(
-                                                  'Removed from Favourites',
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          'Poppins-Regular',
-                                                      color: Colors.white),
-                                                )));
-                                              },
-                                              child: const Text(
-                                                'Remove From favourite',
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        'Poppins-Regular',
-                                                    color: Colors.white),
-                                              )),
-                                      PopupMenuItem(
-                                        child: const Text(
-                                          'Add to play List',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins-Regular',
-                                              color: Colors.white),
-                                        ),
-                                        value: "1",
-                                      ),
-                                      PopupMenuItem(
-                                          onTap: (() {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (ctx) =>
-                                                        MainScreen(
-                                                            finalSong:
-                                                                fullSongs)));
-                                            // Navigator.pop(context);
-                                          }),
-                                          child: Text(
-                                            'Cancel',
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins-Regular',
-                                                color: Colors.green),
-                                          ))
-                                    ],
-                                    onSelected: (value) async {
-                                      if (value == '1') {
-                                        showBottomSheet(
-                                          context: context,
-                                          builder: (context) =>
-                                              AddtoPlayList(song: temp!),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
+                              trailing: MusicListMenu(
+                                  songId: widget.finalMusic[index].metas.id
+                                      .toString()),
                             );
                           },
                         );

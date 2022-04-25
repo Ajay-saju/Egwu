@@ -1,4 +1,5 @@
 import 'package:egvu/database/hiveModelClass.dart';
+import 'package:egvu/playlist/createPlayList2.dart';
 import 'package:egvu/playlist/playList.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class AddtoPlayList extends StatelessWidget {
             child: ListTile(
               onTap: () => showDialog(
                 context: context,
-                builder: (context) => const PlayList(), 
+                builder: (context) => const CreatePlayListTwo(),
               ),
               leading: const Icon(Icons.add),
               title: const Text(
@@ -37,7 +38,7 @@ class AddtoPlayList extends StatelessWidget {
           ),
           ...playlists
               .map(
-                (audio) => audio != "musics" && audio != 'favourites'
+                (audio) => audio != "songs" && audio != 'favourites'
                     ? ListTile(
                         onTap: () async {
                           playlistSongs = box.get(audio);
@@ -47,7 +48,7 @@ class AddtoPlayList extends StatelessWidget {
                                   element.id.toString() == song.id.toString())
                               .toList();
                           if (existingSongs.isEmpty) {
-                            final songs = box.get("musics") as List<LocalSongs>;
+                            final songs = box.get("songs") as List<LocalSongs>;
                             final temp = songs.firstWhere((element) =>
                                 element.id.toString() == song.id.toString());
                             playlistSongs?.add(temp);

@@ -157,7 +157,7 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                           children: [
                             StatefulBuilder(builder: (BuildContext context,
                                 void Function(void Function()) setState) {
-                              return isShuffle
+                              return !isShuffle
                                   ? IconButton(
                                       onPressed: () {
                                         setState(
@@ -227,9 +227,6 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                                           },
                                           icon: const Icon(Icons.favorite));
                             }),
-
-
-                            
                             StatefulBuilder(
                               builder: (BuildContext context,
                                   void Function(void Function()) setState) {

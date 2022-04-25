@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 import 'package:egvu/database/hiveModelClass.dart';
+import 'package:egvu/homeScreen/AddtoPlayList.dart';
 import 'package:flutter/material.dart';
 
 class MusicListMenu extends StatelessWidget {
@@ -17,6 +18,11 @@ class MusicListMenu extends StatelessWidget {
     List? favourites = box.get('favourites');
     final temp = databaseSongs(dbSongs, songId);
     return PopupMenuButton(
+      child: const Icon(
+        Icons.more_vert_rounded,
+        color: Colors.white70,
+      ),
+      color: Colors.black,
       itemBuilder: (context) => [
         favourites!
                 .where((element) => element.id.toString() == temp.id.toString())
@@ -36,7 +42,8 @@ class MusicListMenu extends StatelessWidget {
                 },
                 child: const Text(
                   "Add to Favourite",
-                  style: TextStyle(fontFamily: 'Poppins-Regular'),
+                  style: TextStyle(
+                      fontFamily: 'Poppins-Regular', color: Colors.white70),
                 ),
               )
             : PopupMenuItem(
@@ -48,32 +55,34 @@ class MusicListMenu extends StatelessWidget {
                     SnackBar(
                       content: Text(
                         temp.title + " Removed from Favourites",
-                        style: const TextStyle(fontFamily: 'Poppins-Regular'),
+                        style: const TextStyle(
+                          fontFamily: 'Poppins-Regular',
+                        ),
                       ),
                     ),
                   );
                 },
                 child: const Text(
                   "Remove From Favourite",
-                  style: TextStyle(fontFamily: 'Poppins-Regular'),
+                  style: TextStyle(
+                      fontFamily: 'Poppins-Regular', color: Colors.white70),
                 )),
         const PopupMenuItem(
           child: Text(
-            "Cancel",
-            style: TextStyle(fontFamily: 'Poppins-Regular'),
+            "Add to Play List",
+            style:
+                TextStyle(fontFamily: 'Poppins-Regular', color: Colors.white70),
           ),
-          // value: "1",
+          value: "1",
         ),
       ],
       onSelected: (value) async {
-        Navigator.of(context).pop();
-
-        // if (value == "1") {
-        //   showModalBottomSheet(
-        //     context: context,
-        //     builder: (context) => AddtoPlayList(song: temp),
-        //   );
-        // }
+        if (value == "1") {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => AddtoPlayList(song: temp),
+          );
+        }
       },
     );
   }
