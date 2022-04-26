@@ -42,6 +42,7 @@ class _PlayListState extends State<PlayList> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -232,7 +233,7 @@ class _PlayListState extends State<PlayList> {
                                               context: context,
                                               builder: (context) =>
                                                   EditPlayList(
-                                                    PlaylistName:
+                                                    playlistName:
                                                         playlists[index],
                                                   ));
                                         }

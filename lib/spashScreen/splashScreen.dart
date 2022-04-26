@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:permission_handler/permission_handler.dart';
+//  import 'package:permission_handler/permission_handler.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -20,11 +20,9 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    splash();
-    fetchSong();
-    
+    // Permission.storage.request();
     super.initState();
-    Permission.storage.request();
+    fetchSong();
   }
 
   ///get the current instence
@@ -42,41 +40,47 @@ class _SplashScreenState extends State<SplashScreen> {
 
   fetchSong() async {
     bool permissionStatus = await audioQuery.permissionsStatus();
-    if (!permissionStatus) {
-      await audioQuery.permissionsRequest();
-    }
-    fetchedSong = await audioQuery.querySongs();
-    for (var element in fetchedSong) {
-      if (element.fileExtension == "mp3") {
-        allSongs.add(element);
+
+    if (permissionStatus) {
+      splash();
+
+      fetchedSong = await audioQuery.querySongs();
+
+      for (var element in fetchedSong) {
+        if (element.fileExtension == "mp3") {
+          allSongs.add(element);
+        }
       }
-    }
-    mappedSong = allSongs
-        .map(
-          (audio) => LocalSongs(
-            title: audio.title,
-            artist: audio.artist!,
-            uri: audio.uri!,
-            duration: audio.duration!,
-            id: audio.id,
-          ),
-        )
-        .toList();
+      mappedSong = allSongs
+          .map(
+            (audio) => LocalSongs(
+              title: audio.title,
+              artist: audio.artist!,
+              uri: audio.uri!,
+              duration: audio.duration!,
+              id: audio.id,
+            ),
+          )
+          .toList();
 
-    await box.put("songs", mappedSong);
-    dbSongs = box.get("songs") as List<LocalSongs>;
-    // print(dbSongs);
+      await box.put("songs", mappedSong);
+      dbSongs = box.get("songs") as List<LocalSongs>;
 
-    for (var element in dbSongs) {
-      finalSongs.add(Audio.file(element.uri.toString(),
-          metas: Metas(
-              title: element.title,
-              id: element.id.toString(),
-              artist: element.artist)));
+      for (var element in dbSongs) {
+        finalSongs.add(Audio.file(element.uri.toString(),
+            metas: Metas(
+                title: element.title,
+                id: element.id.toString(),
+                artist: element.artist)));
+      }
+      setState(() {});
+    } else {
+      await audioQuery.permissionsRequest();
+      fetchSong();
     }
+    
   }
 
-  
   splash() async {
     await Future.delayed(const Duration(seconds: 5));
     Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -91,25 +95,23 @@ class _SplashScreenState extends State<SplashScreen> {
   //   super.dispose();
   // }
 
-
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: const Color(0xff3e3e66),
-      body: SafeArea(
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Container(
-            width: 500.w,
-            height: 500.h,
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('asset/cassette_tape.gif'))),
-          ),
-        ]),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Container(
+              width: 500.w,
+              height: 500.h,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('asset/cassette_tape.gif'))),
+            ),
+          ]),
+        ),
       ),
     );
   }
-
 }

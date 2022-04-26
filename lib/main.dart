@@ -1,6 +1,6 @@
 import 'package:egvu/database/hiveModelClass.dart';
 
-import 'package:egvu/spashScreen/splashScreen.dart';
+import 'package:egvu/spashScreen/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,9 +11,7 @@ Future main() async {
   Hive.registerAdapter(LocalSongsAdapter());
   await Hive.openBox<List>(boxName);
 
-
   final box = Boxes.getInstance();
-
 
   List<dynamic> favkeys = box.keys.toList();
   if (!favkeys.contains('favourites')) {
@@ -34,6 +32,10 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (ctx) => MaterialApp(
+        // builder: (context, child) {
+        //   return MediaQuery(
+        //       data: const MediaQueryData(textScaleFactor: .8), child: child!);
+        // },
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -44,5 +46,4 @@ class MyApp extends StatelessWidget {
       designSize: const Size(286.86614173, 619.84251969),
     );
   }
-  
 }

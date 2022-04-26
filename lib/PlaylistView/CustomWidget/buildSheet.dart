@@ -53,7 +53,7 @@ class _BuildSheetState extends State<BuildSheet> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(15.r)),
                         image: const DecorationImage(
-                          image: AssetImage("asset/Mahaan-feat.jpg"),
+                          image: AssetImage("asset/null.jpg"),
                           fit: BoxFit.cover,
                         ),
                       ),

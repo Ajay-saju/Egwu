@@ -55,78 +55,92 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                   valueListenable: box.listenable(),
                   builder: (BuildContext context, value, child) {
                     final likedSongs = box.get('favourites');
-                    // print(likedSongs);
-                    return ListView.builder(
-                        itemCount: likedSongs!.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              for (var element in likedSongs) {
-                                favSongs.add(Audio.file(element.uri,
-                                    metas: Metas(
-                                        artist: element.artist,
-                                        id: element.id.toString(),
-                                        title: element.title)));
-                              }
-                              OpenAudioPlayer(index: index, musicList: favSongs)
-                                  .openAssetPlayer(index: index);
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PlayBackWidget(
-                                    index: index,
-                                    finalSong: favSongs,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: ListTile(
-                              leading: SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: QueryArtworkWidget(
-                                  id: likedSongs[index].id,
-                                  type: ArtworkType.AUDIO,
-                                  artworkBorder: BorderRadius.circular(15),
-                                  artworkFit: BoxFit.cover,
-                                  nullArtworkWidget: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15.r)),
-                                      image: const DecorationImage(
-                                        image:
-                                            AssetImage("asset/nullMusic.png"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              trailing:
-                              
-                              
-                               MusicListMenu(
-                                  songId: likedSongs[index].id.toString()),
-                              title: Text(
-                                likedSongs[index].title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontFamily: 'Poppins-Regular'),
-                              ),
-                              subtitle: Text(
-                                likedSongs[index].artist,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                    //  likedSongs.isEmpty?
+                    //   return Center(
+                    //     child: Text('Add your favourite songs'),
+                    //   ):
+
+                    return likedSongs!.isEmpty
+                        ? SizedBox(
+                            child: Center(
+                              child: Text(
+                                'No Favorite songs',
+                                style: TextStyle(
+                                    fontSize: 20.sp,
                                     fontFamily: 'Poppins-Regular'),
                               ),
                             ),
-                          );
-                        });
+                          )
+                        : ListView.builder(
+                            itemCount: likedSongs.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  for (var element in likedSongs) {
+                                    favSongs.add(Audio.file(element.uri,
+                                        metas: Metas(
+                                            artist: element.artist,
+                                            id: element.id.toString(),
+                                            title: element.title)));
+                                  }
+                                  OpenAudioPlayer(
+                                          index: index, musicList: favSongs)
+                                      .openAssetPlayer(index: index);
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PlayBackWidget(
+                                        index: index,
+                                        finalSong: favSongs,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: ListTile(
+                                  leading: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: QueryArtworkWidget(
+                                      id: likedSongs[index].id,
+                                      type: ArtworkType.AUDIO,
+                                      artworkBorder: BorderRadius.circular(15),
+                                      artworkFit: BoxFit.cover,
+                                      nullArtworkWidget: Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15.r)),
+                                          image: const DecorationImage(
+                                            image: AssetImage(
+                                                "asset/nullMusic.png"),
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  trailing: MusicListMenu(
+                                      songId: likedSongs[index].id.toString()),
+                                  title: Text(
+                                    likedSongs[index].title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontFamily: 'Poppins-Regular'),
+                                  ),
+                                  subtitle: Text(
+                                    likedSongs[index].artist,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontFamily: 'Poppins-Regular'),
+                                  ),
+                                ),
+                              );
+                            });
                   },
                 ))
               ],

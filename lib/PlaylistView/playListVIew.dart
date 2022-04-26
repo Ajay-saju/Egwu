@@ -102,7 +102,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             child: Center(
                               child: Text(
                                 'No Songs Here',
-                                style: TextStyle(fontSize: 20.sp),
+                                style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: 'Poppins=Regular'),
                               ),
                             ),
                           )
@@ -124,12 +126,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       .openAssetPlayer(
                                           index: index, audios: playPlayList);
 
-                                      //     Navigator.push(
-                                      // context,
-                                      // MaterialPageRoute(
-                                      //     builder: (context) => MainScreen(
-                                      //           finalSong: playPlayList,
-                                      //         )));
+                                  //     Navigator.push(
+                                  // context,
+                                  // MaterialPageRoute(
+                                  //     builder: (context) => MainScreen(
+                                  //           finalSong: playPlayList,
+                                  //         )));
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -138,7 +140,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                           index: index,
                                         ),
                                       ));
-                                  
                                 },
                                 child: ListTile(
                                   leading: SizedBox(
@@ -158,7 +159,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                           image: DecorationImage(
                                             image: AssetImage(
                                                 "asset/nullMusic.png"),
-                                            fit: BoxFit.cover,
+                                            fit: BoxFit.contain,
                                           ),
                                         ),
                                       ),
@@ -202,8 +203,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                                   Navigator.of(context).pop();
                                                 },
                                                 child: Text(
-                                                  'Deletet Song',
+                                                  'Delete Song',
                                                   style: TextStyle(
+                                                      color: Colors.white,
                                                       fontSize: 10.sp,
                                                       fontWeight:
                                                           FontWeight.bold,

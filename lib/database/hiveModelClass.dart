@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 part 'hiveModelClass.g.dart';
+
 @HiveType(typeId: 0)
 class LocalSongs extends HiveObject {
   LocalSongs({
@@ -9,28 +10,24 @@ class LocalSongs extends HiveObject {
     required this.duration,
     required this.id,
   });
-@HiveField(0)
+  @HiveField(0)
   late String title;
   @HiveField(1)
-    late String artist;
-    @HiveField(2)
-      late String uri;
-      @HiveField(3)
-        late int duration;
-        @HiveField(4) 
-          late int id;
-
-
-
-
-
+  late String artist;
+  @HiveField(2)
+  late String uri;
+  @HiveField(3)
+  late int duration;
+  @HiveField(4)
+  late int id;
 }
 
-String boxName= 'songs';
+String boxName = 'songs';
+
 class Boxes {
   static Box<List>? _box;
-  static Box<List> getInstance(){
-     return _box ??= Hive.box(boxName);
+  static Box<List> getInstance() {
+    return _box ??= Hive.box(boxName);
   }
 }
 
