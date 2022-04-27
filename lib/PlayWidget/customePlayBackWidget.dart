@@ -1,5 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+
 import 'package:egvu/database/hiveModelClass.dart';
+import 'package:egvu/homeScreen/AddToPlayList.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,11 +19,10 @@ class PlayBackWidget extends StatefulWidget {
   State<PlayBackWidget> createState() => _PlayBackWidgetState();
 }
 
-// bool? isPlayingSong;
-
 class _PlayBackWidgetState extends State<PlayBackWidget> {
   List<LocalSongs> dbSongs = [];
   List<dynamic>? likedSongs = [];
+  LocalSongs? currentSong;
 
   final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer.withId('0');
 
@@ -55,6 +56,33 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
               colors: [Color(0xffffffff), Color(0xffbfbfc1)])),
       child: Scaffold(
           appBar: AppBar(
+            actions: [
+              PopupMenuButton(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.more_vert_rounded,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  color: Colors.grey,
+                  itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: const Text(
+                            'Add to Play List',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Poppins-Regular'),
+                          ),
+                          onTap: () {
+                            showBottomSheet(
+                                context: context,
+                                builder: (context) =>
+                                    AddtoPlayList(song: currentSong!));
+                          },
+                        ),
+                      ]),
+            ],
             title: Text(
               'Now playing',
               style: TextStyle(
@@ -81,7 +109,7 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
             final myAudio =
                 find(widget.finalSong, playing!.audio.assetAudioPath);
 
-            final currentSong = dbSongs.firstWhere((element) =>
+            currentSong = dbSongs.firstWhere((element) =>
                 element.id.toString() == myAudio.metas.id.toString());
 
             likedSongs = box.get("favourites");
@@ -103,7 +131,7 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                         nullArtworkWidget: const Image(
                             image: AssetImage('asset/nullPlay.gif')),
                         id: int.parse(myAudio.metas.id!),
-                        artworkFit: BoxFit.fill,
+                        artworkFit: BoxFit.cover,
                         type: ArtworkType.AUDIO),
                   ),
                   SizedBox(
@@ -159,7 +187,7 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                                 void Function(void Function()) setState) {
                               return !isShuffle
                                   ? IconButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         setState(
                                           () {
                                             isShuffle = true;
@@ -170,7 +198,7 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                                       icon: const Icon(Icons.shuffle_rounded),
                                     )
                                   : IconButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         setState(
                                           () {
                                             isShuffle = false;
@@ -183,49 +211,38 @@ class _PlayBackWidgetState extends State<PlayBackWidget> {
                             }),
                             StatefulBuilder(builder: (BuildContext context,
                                 void Function(void Function()) setState) {
-                              return
-                                  // likedSongs == null
-                                  // ? Container(height: 30,width: 30,color: Color.fromARGB(255, 16, 205, 101),)
-                                  //  :
-                                  //   Container(height: 30,width: 30,color: Colors.yellow,);
-
-                                  likedSongs!
-                                          .where((element) =>
-                                              element.id.toString() ==
-                                              currentSong.id.toString())
-                                          .isEmpty
-                                      ? IconButton(
-                                          onPressed: () async {
-                                            setState(
-                                              () {
-                                                likedSongs?.add(currentSong);
-                                                box.put(
-                                                    'favourites', likedSongs!);
-                                                likedSongs =
-                                                    box.get('favourites');
-                                              },
-                                            );
-
-                                            // setState(() {});
+                              return likedSongs!
+                                      .where((element) =>
+                                          element.id.toString() ==
+                                          currentSong!.id.toString())
+                                      .isEmpty
+                                  ? IconButton(
+                                      onPressed: () async {
+                                        setState(
+                                          () {
+                                            likedSongs?.add(currentSong);
+                                            box.put('favourites', likedSongs!);
+                                            likedSongs = box.get('favourites');
                                           },
-                                          icon: const Icon(
-                                              Icons.favorite_border_rounded),
-                                        )
-                                      : IconButton(
-                                          onPressed: () async {
-                                            setState(
-                                              () {
-                                                likedSongs?.removeWhere(
-                                                    (element) =>
-                                                        element.id.toString() ==
-                                                        currentSong.id
-                                                            .toString());
-                                                box.put(
-                                                    'favourites', likedSongs!);
-                                              },
-                                            );
+                                        );
+
+                                        // setState(() {});
+                                      },
+                                      icon: const Icon(
+                                          Icons.favorite_border_rounded),
+                                    )
+                                  : IconButton(
+                                      onPressed: () async {
+                                        setState(
+                                          () {
+                                            likedSongs?.removeWhere((element) =>
+                                                element.id.toString() ==
+                                                currentSong!.id.toString());
+                                            box.put('favourites', likedSongs!);
                                           },
-                                          icon: const Icon(Icons.favorite));
+                                        );
+                                      },
+                                      icon: const Icon(Icons.favorite));
                             }),
                             StatefulBuilder(
                               builder: (BuildContext context,

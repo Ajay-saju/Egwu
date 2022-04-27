@@ -75,17 +75,16 @@ class _BuildSheetState extends State<BuildSheet> {
                         onPressed: () async {
                           playlistSongs.add(dbSongs[index]);
                           await box.put(widget.playListName, playlistSongs);
-                          //box.get(widget.playlistName);
+                          
 
                           setState(() {
-                            // playlistSongs =
-                            //     box.get(widget.playlistName)!.cast<Songs>();
+                            
                           });
                         },
                         icon: const Icon(Icons.add))
                     : IconButton(
                         onPressed: () async {
-                          // await box.put(widget.playlistName, playlistSongs);
+                          
 
                           playlistSongs.removeWhere((elemet) =>
                               elemet.id.toString() ==

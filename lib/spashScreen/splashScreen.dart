@@ -5,6 +5,7 @@ import 'package:egvu/database/hiveModelClass.dart';
 import 'package:egvu/mainScreen/mainScren.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
 //  import 'package:permission_handler/permission_handler.dart';
@@ -20,16 +21,19 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // Permission.storage.request();
+    if (Hive.box<StoreNotification>(storeBoxname).isEmpty) {
+      Hive.box<StoreNotification>(storeBoxname)
+          .add(StoreNotification(isNotificationOn: true));
+    }
+    
     super.initState();
     fetchSong();
   }
 
-  ///get the current instence
+  
   OnAudioQuery audioQuery = OnAudioQuery();
   final audiopplayer = AssetsAudioPlayer.withId("0");
-  //
-  // creating instence for onAudioquery
+  
   final box = Boxes.getInstance();
 
   List<SongModel> fetchedSong = [];
@@ -78,7 +82,6 @@ class _SplashScreenState extends State<SplashScreen> {
       await audioQuery.permissionsRequest();
       fetchSong();
     }
-    
   }
 
   splash() async {
@@ -89,11 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ))));
   }
 
-  // @override
-  // void dispose() {
-  //   // box.close();
-  //   super.dispose();
-  // }
+  
 
   @override
   Widget build(BuildContext context) {

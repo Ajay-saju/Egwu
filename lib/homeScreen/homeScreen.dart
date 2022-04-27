@@ -4,8 +4,7 @@ import 'package:egvu/Favourite/customeContainer/musicList.dart';
 import 'package:egvu/PlayWidget/customePlayBackWidget.dart';
 import 'package:egvu/classes/opneAudio.dart';
 import 'package:egvu/database/hiveModelClass.dart';
-import 'package:egvu/homeScreen/AddtoPlayList.dart';
-import 'package:egvu/mainScreen/mainScren.dart';
+
 
 // import 'package:egvu/mainScreen/mainScren.dart';
 
@@ -73,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: SafeArea(
                 child: Padding(
               padding: EdgeInsets.all(10.r),
@@ -113,6 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 setState(() {
                                   visible = true;
                                 });
+                            
 
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PlayBackWidget(

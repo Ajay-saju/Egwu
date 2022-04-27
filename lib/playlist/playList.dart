@@ -42,7 +42,6 @@ class _PlayListState extends State<PlayList> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -77,86 +76,38 @@ class _PlayListState extends State<PlayList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 50.h, left: 20.w),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => const CreatePlayListTwo());
+                },
+                child: Container(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Create Playlist',
-                        style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16.sp,
-                            fontFamily: 'Poppins-Regular'),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Tap to Create New Playlist',
+                          style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12.sp,
+                              fontFamily: 'Poppins-Regular'),
+                        ),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) =>
-                                    const CreatePlayListTwo());
-                            // showDialog(
-                            //   context: context,
-                            //   builder: (BuildContext context) => AlertDialog(
-                            //     backgroundColor: Colors.black,
-                            //     title: const Text(
-                            //       'Create playlist',
-                            //       style: TextStyle(
-                            //           color: Colors.white70,
-                            //           fontFamily: 'Poppins-Regular'),
-                            //     ),
-                            //     content: TextFormField(
-                            //       controller: controller,
-                            //       autofocus: true,
-                            //       // initialValue: 'Playlist name',
-                            //       style: const TextStyle(
-                            //           color: Colors.white70,
-                            //           fontFamily: 'Poppins-Regular'),
-                            //     ),
-                            //     actions: [
-                            //       TextButton(
-                            //           onPressed: () {
-                            //             Navigator.of(context).pop();
-                            //           },
-                            //           child: const Text(
-                            //             'Cancel',
-                            //             style: TextStyle(
-                            //                 color: Colors.white70,
-                            //                 fontFamily: 'Poppins-Regular'),
-                            //           )),
-                            //       TextButton(
-                            //           onPressed: () {
-                            //             // selectImageBottumsheet(context);
-                            //             playListCreated();
-                            //           },
-                            //           child: const Text(
-                            //             'Create',
-                            //             style: TextStyle(
-                            //                 fontFamily: 'Poppins-Regular'),
-                            //           ))
-                            //     ],
-                            //   ),
-                            // );
-                          },
-                          child: Text(
-                            'Add',
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Regular',
-                                fontSize: 12.sp,
-                                color: Colors.white),
-                          ))
                     ],
                   ),
-                ),
-                width: 600.w,
-                height: 110.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                      image:
-                          AssetImage('asset/PlayListImages/createPlaylist.jpg'),
-                      fit: BoxFit.fill),
+                  width: 600.w,
+                  height: 110.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: const DecorationImage(
+                        image: AssetImage(
+                            'asset/PlayListImages/createPlaylist.jpg'),
+                        fit: BoxFit.cover),
+                  ),
                 ),
               ),
               SizedBox(
@@ -167,78 +118,117 @@ class _PlayListState extends State<PlayList> {
                     valueListenable: box.listenable(),
                     builder: (context, boxes, _) {
                       playlists = box.keys.toList();
-                      return ListView.builder(
+                      return ListView.separated(
+                          separatorBuilder: (context, index) => const SizedBox(
+                                height: 10,
+                              ),
                           shrinkWrap: false,
                           itemCount: playlists.length,
                           itemBuilder: (context, index) {
                             return playlists[index] != 'songs' &&
                                     playlists[index] != 'favourites'
-                                ? ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PlaylistScreen(
-                                                    playlistName:
-                                                        playlists[index],
-                                                  )));
-                                    },
-                                    leading: Icon(
-                                      Icons.playlist_play_rounded,
-                                      color: Colors.black,
-                                      size: 25.sp,
-                                    ),
-                                    title: Text(
-                                      playlists[index].toString(),
-                                      style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontFamily: 'Poppins-Regular',
-                                      ),
-                                    ),
-                                    trailing: PopupMenuButton(
-                                      color: Colors.black,
-                                      icon: const Icon(
-                                        Icons.more_vert_rounded,
-                                        color: Colors.white54,
-                                      ),
-                                      itemBuilder: (context) => [
-                                        const PopupMenuItem(
-                                          child: Text(
-                                            'Remove playlist',
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins-Regular',
-                                                color: Colors.white70),
-                                          ),
-                                          value: "0",
-                                        ),
-                                        const PopupMenuItem(
-                                            value: '1',
-                                            child: Text(
-                                              'Rename Playlist',
-                                              style: TextStyle(
-                                                  fontFamily: 'Poppins-Regular',
-                                                  color: Colors.white70),
-                                            ))
-                                      ],
-                                      onSelected: (value) {
-                                        if (value == "0") {
-                                          box.delete(playlists[index]);
-                                          setState(() {
-                                            playlists = box.keys.toList();
-                                          });
-                                        }
-                                        if (value == '1') {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  EditPlayList(
-                                                    playlistName:
-                                                        playlists[index],
-                                                  ));
-                                        }
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PlaylistScreen(
+                                                      playlistName:
+                                                          playlists[index],
+                                                    )));
                                       },
-                                    ))
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                colorFilter: ColorFilter.mode(
+                                                    Colors.black
+                                                        .withOpacity(0.50),
+                                                    BlendMode.colorBurn),
+                                                fit: BoxFit.cover,
+                                                image: AssetImage(
+                                                  index <= imageList.length
+                                                      ? imageList[index]
+                                                      : imageList[5],
+                                                ))),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              child: Icon(
+                                                Icons.play_arrow_rounded,
+                                                color: Colors.white70,
+                                                size: 18.sp,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                playlists[index].toString(),
+                                                style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Poppins-Regular',
+                                                ),
+                                              ),
+                                            ),
+                                            PopupMenuButton(
+                                              color: Colors.black,
+                                              icon: const Icon(
+                                                Icons.more_vert_rounded,
+                                                color: Colors.white70,
+                                              ),
+                                              itemBuilder: (context) => [
+                                                const PopupMenuItem(
+                                                  child: Text(
+                                                    'Remove playlist',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Poppins-Regular',
+                                                        color: Colors.white70),
+                                                  ),
+                                                  value: "0",
+                                                ),
+                                                const PopupMenuItem(
+                                                    value: '1',
+                                                    child: Text(
+                                                      'Rename Playlist',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Poppins-Regular',
+                                                          color:
+                                                              Colors.white70),
+                                                    ))
+                                              ],
+                                              onSelected: (value) {
+                                                if (value == "0") {
+                                                  box.delete(playlists[index]);
+                                                  setState(() {
+                                                    playlists =
+                                                        box.keys.toList();
+                                                  });
+                                                }
+                                                if (value == '1') {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          EditPlayList(
+                                                            playlistName:
+                                                                playlists[
+                                                                    index],
+                                                          ));
+                                                }
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
                                 : Container();
                           });
                     }),
@@ -249,34 +239,22 @@ class _PlayListState extends State<PlayList> {
       ),
     );
   }
-
-  // playListCreated() {
-  //   playListName = controller.text;
-  //   List<LocalSongs> librerary = [];
-  //   List? exsistingName = [];
-  //   if (playlists.isNotEmpty) {
-  //     exsistingName =
-  //         playlists.where((element) => element == playListName).toList();
-  //   }
-  //   if (playListName != '' && exsistingName.isEmpty) {
-  //     box.put(playListName, librerary);
-  //     Navigator.of(context).pop();
-  //     setState(() {
-  //       playlists = box.keys.toList();
-  //     });
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(excistingPlaylist);
-  //   }
-  //   controller.clear();
-  // }
 }
 
-// costomShowDialog() {}
-
-// List<String> myImage = [
-//   'asset/PlayListImages/headphones_2.jpg',
-//   'asset/PlayListImages/pop.jpg',
-//   'asset/o-kadhal-kanmani-movie-poster.jpg',
-//   'asset/Trance_film_poster.jpg',
-//   'asset/Mahaan-feat.jpg',
-// ];
+List<String> imageList = [
+  'asset/PlayListImages/play4.jpg',
+  'asset/PlayListImages/play6.png',
+  'asset/PlayListImages/play7.jpg',
+  'asset/PlayListImages/play8.jpeg',
+  'asset/PlayListImages/play9.jpeg',
+  'asset/PlayListImages/play10.jpeg',
+  'asset/PlayListImages/play11.jpeg',
+  'asset/PlayListImages/play12.jpeg',
+  'asset/PlayListImages/play13.jpg',
+  'asset/PlayListImages/play5.jpg',
+  'asset/PlayListImages/play14.jpg',
+  'asset/PlayListImages/play0.jpg',
+  'asset/PlayListImages/play1.jpg',
+  'asset/PlayListImages/play2.jpg',
+  'asset/PlayListImages/play3.jpg',
+];

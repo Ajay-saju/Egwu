@@ -1,6 +1,6 @@
 import 'package:egvu/database/hiveModelClass.dart';
 import 'package:egvu/playlist/createPlayList2.dart';
-import 'package:egvu/playlist/playList.dart';
+
 import 'package:flutter/material.dart';
 
 class AddtoPlayList extends StatelessWidget {

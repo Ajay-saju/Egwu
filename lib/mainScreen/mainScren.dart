@@ -71,6 +71,7 @@ class _MainScreenState extends State<MainScreen> {
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => PlayBackWidget(
                               finalSong: widget.finalSong!,
+                              // index: 2,
                             ))),
                     child: Row(
                       children: [
@@ -83,12 +84,7 @@ class _MainScreenState extends State<MainScreen> {
                                     nullArtworkWidget: const Image(
                                         image: AssetImage('asset/OSOD.gif')),
                                     id: int.parse(myAudio.metas.id!),
-                                    type: ArtworkType.AUDIO)
-                                // Image(
-                                //     fit: BoxFit.cover,
-                                //     image: NetworkImage(
-                                //         myAudio.metas.image!.path)),
-                                )),
+                                    type: ArtworkType.AUDIO))),
                         SizedBox(
                           width: 10.w,
                         ),

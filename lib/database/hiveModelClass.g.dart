@@ -51,3 +51,37 @@ class LocalSongsAdapter extends TypeAdapter<LocalSongs> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class StoreNotificationAdapter extends TypeAdapter<StoreNotification> {
+  @override
+  final int typeId = 1;
+
+  @override
+  StoreNotification read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return StoreNotification(
+      isNotificationOn: fields[0] as bool,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, StoreNotification obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.isNotificationOn);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StoreNotificationAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

@@ -2,7 +2,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:egvu/PlayWidget/customePlayBackWidget.dart';
 import 'package:egvu/classes/opneAudio.dart';
 import 'package:egvu/database/hiveModelClass.dart';
-import 'package:egvu/mainScreen/mainScren.dart';
+
+
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -24,7 +26,7 @@ class _SearchState extends State<Search> {
   List<LocalSongs> dbSongs = [];
   List<Audio> allSongs = [];
 
-  searchSongs() {
+  searchSongs() async {
     dbSongs = box.get('songs') as List<LocalSongs>;
     for (var element in dbSongs) {
       allSongs.add(Audio.file(element.uri.toString(),
@@ -98,34 +100,33 @@ class _SearchState extends State<Search> {
           width: width,
           child: Column(
             children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
-                ),
-                height: MediaQuery.of(context).size.height * .07,
-                width: MediaQuery.of(context).size.width * .9,
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.only(top: 14.h, right: 10.h, left: 10.h),
-                      hintText: 'Search here',
-                      filled: true,
-                      hintStyle: TextStyle(
-                          color: Colors.black87,
-                          fontFamily: 'Poppins-Regular',
-                          fontSize: 10.sp),
-                      suffixIcon: Icon(
-                        Icons.search_rounded,
-                        color: Colors.black,
-                        size: 30.sp,
-                      )),
-                  onChanged: (value) {
-                    setState(() {
-                      search = value.trim();
-                    });
-                  },
+                  child: TextField(
+                    style: TextStyle(fontSize: 13.sp),
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                        fillColor: Colors.white54,
+                        border: InputBorder.none,
+                        hintText: 'Search here',
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Colors.black26,
+                            fontFamily: 'Poppins-Regular',
+                            fontSize: 13.sp),
+                        suffixIcon: Icon(
+                          FeatherIcons.search,
+                          color: Colors.black,
+                          size: 17.sp,
+                        )),
+                    onChanged: (value) {
+                      setState(() {
+                        search = value.trim();
+                      });
+                    },
+                  ),
                 ),
               ),
               search.isNotEmpty
@@ -155,7 +156,6 @@ class _SearchState extends State<Search> {
                                                         PlayBackWidget(
                                                             finalSong:
                                                                 searchResult)));
-                                           
                                           },
                                           child: ListTile(
                                             leading: SizedBox(

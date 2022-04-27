@@ -45,6 +45,7 @@ class _CreatePlayListTwoState extends State<CreatePlayListTwo> {
                     onChanged: (value) {
                       title = value.trim();
                     },
+                    textCapitalization: TextCapitalization.sentences,
                     validator: (value) {
                       List keys = box.keys.toList();
                       if (value!.trim() == '') {
@@ -66,7 +67,6 @@ class _CreatePlayListTwoState extends State<CreatePlayListTwo> {
                           if (formkey.currentState!.validate()) {
                             box.put(title, playlist);
                             Navigator.pop(context);
-                            
                           }
                         },
                         child: const Text(

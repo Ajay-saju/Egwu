@@ -1,3 +1,5 @@
+import 'package:feather_icons/feather_icons.dart';
+
 import 'package:flutter/material.dart';
 
 ValueNotifier<int> indexChaingeNotifier = ValueNotifier(0);
@@ -11,30 +13,37 @@ class MyBottumNavBar extends StatelessWidget {
       valueListenable: indexChaingeNotifier,
       builder: (context, int newIndex, _) {
         return BottomNavigationBar(
+          showUnselectedLabels: false,
+          showSelectedLabels: true,
           currentIndex: newIndex,
           onTap: (index) {
             indexChaingeNotifier.value = index;
           },
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: '',
+                tooltip: 'Home',
+                icon: Icon(FeatherIcons.home),
+                label: '•',
                 backgroundColor: Color(0xff393372)),
             BottomNavigationBarItem(
-                icon: Icon(Icons.favorite_rounded),
-                label: '',
+                tooltip: 'Favourite',
+                icon: Icon(FeatherIcons.heart),
+                label: '•',
                 backgroundColor: Color(0xff96b2ab)),
             BottomNavigationBarItem(
-                icon: Icon(Icons.search_outlined),
-                label: '',
+                tooltip: 'Search',
+                icon: Icon(FeatherIcons.search),
+                label: '•',
                 backgroundColor: Color(0xff5691bc)),
             BottomNavigationBarItem(
-                icon: Icon(Icons.music_video_rounded),
-                label: '',
+                tooltip: 'Play List',
+                icon: Icon(FeatherIcons.music),
+                label: '•',
                 backgroundColor: Color(0xffbc68fe)),
             BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: '',
+                tooltip: 'Settings',
+                icon: Icon(FeatherIcons.settings),
+                label: '•',
                 backgroundColor: Color(0xff494949)),
           ],
         );

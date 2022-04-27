@@ -22,6 +22,16 @@ class LocalSongs extends HiveObject {
   late int id;
 }
 
+@HiveType(typeId: 1)
+class StoreNotification extends HiveObject {
+  @HiveField(0)
+  final bool isNotificationOn;
+
+  StoreNotification({required this.isNotificationOn});
+}
+
+String storeBoxname = 'notification';
+
 String boxName = 'songs';
 
 class Boxes {

@@ -10,6 +10,8 @@ Future main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(LocalSongsAdapter());
   await Hive.openBox<List>(boxName);
+  Hive.registerAdapter(StoreNotificationAdapter());
+  await Hive.openBox<StoreNotification>(storeBoxname);
 
   final box = Boxes.getInstance();
 
@@ -25,17 +27,14 @@ Future main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (ctx) => MaterialApp(
-        // builder: (context, child) {
-        //   return MediaQuery(
-        //       data: const MediaQueryData(textScaleFactor: .8), child: child!);
-        // },
+       
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
