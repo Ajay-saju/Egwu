@@ -32,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   
   OnAudioQuery audioQuery = OnAudioQuery();
+  
   final audiopplayer = AssetsAudioPlayer.withId("0");
   
   final box = Boxes.getInstance();

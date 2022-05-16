@@ -25,8 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    Container(
+    return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -98,7 +97,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }),
               ListTile(
                 onTap: () {
-                  Share.share('Go Music with Offline');
+                  Share.share(
+                      'Egwu - Go music with offline. Dowload the offline music player with enrich User interface. https://play.google.com/store/apps/details?id=in.brototype.egvu ');
                 },
                 leading: const Icon(
                   Icons.share,

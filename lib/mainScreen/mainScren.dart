@@ -71,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => PlayBackWidget(
                               finalSong: widget.finalSong!,
-                              // index: 2,
+                              
                             ))),
                     child: Row(
                       children: [
@@ -95,8 +95,7 @@ class _MainScreenState extends State<MainScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                // height: 40.h,
-                                // width: 200.h,
+                                
                                 height: 15.h,
                                 width: 150.h,
                                 child: Marquee(
