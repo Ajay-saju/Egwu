@@ -37,7 +37,7 @@ String boxName = 'songs';
 class Boxes {
   static Box<List>? _box;
   static Box<List> getInstance() {
-    return _box ??= Hive.box(boxName);
+    return _box ??= Hive.box(boxName); 
   }
 }
 

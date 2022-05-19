@@ -2,7 +2,7 @@ import 'package:egvu/database/hiveModelClass.dart';
 import 'package:egvu/playlist/createPlayList2.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 class AddtoPlayList extends StatelessWidget {
   LocalSongs song;
@@ -26,7 +26,7 @@ class AddtoPlayList extends StatelessWidget {
             child: ListTile(
               onTap: () => showDialog(
                 context: context,
-                builder: (context) => const CreatePlayListTwo(),
+                builder: (context) =>  CreatePlayListTwo(),
               ),
               leading: const Icon(Icons.add),
               title: const Text(

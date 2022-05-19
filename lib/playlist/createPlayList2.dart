@@ -2,14 +2,10 @@ import 'package:egvu/database/hiveModelClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CreatePlayListTwo extends StatefulWidget {
-  const CreatePlayListTwo({Key? key}) : super(key: key);
+class CreatePlayListTwo extends StatelessWidget {
+   CreatePlayListTwo({Key? key}) : super(key: key);
 
-  @override
-  State<CreatePlayListTwo> createState() => _CreatePlayListTwoState();
-}
 
-class _CreatePlayListTwoState extends State<CreatePlayListTwo> {
   List<LocalSongs> playlist = [];
   final box = Boxes.getInstance();
   String? title;

@@ -12,15 +12,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:marquee/marquee.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   List<Audio>? finalSong = [];
   MainScreen({Key? key, required this.finalSong}) : super(key: key);
 
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
 
-class _MainScreenState extends State<MainScreen> {
+
+
   OnAudioQuery audioQuery = OnAudioQuery();
 
   final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer.withId('0');
@@ -28,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     return source.firstWhere((element) => element.path == fromPath);
   }
 
-  bool? visibleOf = visible;
+  // bool? visibleOf = visible;
   bool isPlaying = false;
   bool isPause = false;
   IconData iconPlay = Icons.play_circle_outline_rounded;
@@ -38,11 +36,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final screens = [
       HomeScreen(
-        finalMusic: widget.finalSong!,
+        finalMusic: finalSong!,
       ),
-      const FavouritesScreen(),
+      FavouritesScreen(),
       Search(
-        fullSongs: widget.finalSong!,
+        fullSongs: finalSong!,
       ),
       const PlayList(),
       const SettingsScreen(),
@@ -61,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
             alignment: Alignment.bottomCenter,
             child: audioPlayer.builderCurrent(builder: (context, playing) {
               final myAudio =
-                  find(widget.finalSong!, playing.audio.assetAudioPath);
+                  find(finalSong!, playing.audio.assetAudioPath);
 
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -70,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => PlayBackWidget(
-                              finalSong: widget.finalSong!,
+                              finalSong: finalSong!,
                               
                             ))),
                     child: Row(

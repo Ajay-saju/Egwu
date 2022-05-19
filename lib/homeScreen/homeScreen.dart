@@ -6,15 +6,18 @@ import 'package:egvu/classes/opneAudio.dart';
 import 'package:egvu/database/hiveModelClass.dart';
 
 
+
 // import 'package:egvu/mainScreen/mainScren.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:hive/hive.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
 
-class HomeScreen extends StatefulWidget {
+
+class HomeScreen extends StatelessWidget {
   List<Audio> finalMusic = [];
 
   HomeScreen({
@@ -22,14 +25,11 @@ class HomeScreen extends StatefulWidget {
     required this.finalMusic,
   }) : super(key: key);
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
 
 int? songIndex;
-bool visible = false;
+// bool visible = false;
 
-class _HomeScreenState extends State<HomeScreen> {
+
   final box = Boxes.getInstance();
   List<LocalSongs> dbSongs = [];
   List<Audio> fullSongs = [];
@@ -40,13 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    LocalSongs? temp;
+    
 
-    String songId = '';
+     String songId = '';
     dbSongs = box.get('songs') as List<LocalSongs>;
     List? favourites = box.get('favourites');
 
-    temp = databaseSongs(dbSongs, songId);
+    
 
     return Container(
       decoration: const BoxDecoration(
@@ -87,12 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ignoreCase: true,
                       ),
                       builder: (context, item) {
-                        if (widget.finalMusic.isEmpty) {
+                        if (finalMusic.isEmpty) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
                         }
-                        if (widget.finalMusic.isEmpty) {
+                        if (finalMusic.isEmpty) {
                           return const Text('No Songs Found');
                         }
 
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           controller: ScrollController(),
                           shrinkWrap: true,
                           itemExtent: 60.h,
-                          itemCount: widget.finalMusic.length,
+                          itemCount: finalMusic.length,
                           itemBuilder: (BuildContext context, int index) {
                             songIndex = index;
 
@@ -108,18 +108,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () async {
                                 OpenAudioPlayer(
                                         index: index,
-                                        musicList: widget.finalMusic)
+                                        musicList: finalMusic)
                                     .openAssetPlayer(index: index);
-                                setState(() {
-                                  visible = true;
-                                });
+                                    // context.read<VisibleCubit>().visibleChainge(true);
+
+                                // setState(() {
+                                //   visible = true;
+                                // });
                             
 
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PlayBackWidget(
-                                        finalSong: widget.finalMusic)));
+                                        finalSong: finalMusic)));
 
-                                songId = widget.finalMusic[index].metas.id
+                                songId = finalMusic[index].metas.id
                                     .toString();
                               },
 
@@ -127,8 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: QueryArtworkWidget(
                                   artworkWidth: 41.w,
                                   artworkHeight: 50.w,
-                                  id: int.parse(widget
-                                      .finalMusic[index].metas.id
+                                  id: int.parse(
+                                      finalMusic[index].metas.id
                                       .toString()),
                                   nullArtworkWidget: Image(
                                     image:
@@ -143,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               // ),
                               // leading:
                               title: Text(
-                                widget.finalMusic[index].metas.title!,
+                                finalMusic[index].metas.title!,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Regular',
@@ -152,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
 
                               subtitle: Text(
-                                widget.finalMusic[index].metas.artist!,
+                                finalMusic[index].metas.artist!,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Regular',
@@ -161,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
 
                               trailing: MusicListMenu(
-                                  songId: widget.finalMusic[index].metas.id
+                                  songId: finalMusic[index].metas.id
                                       .toString()),
                             );
                           },

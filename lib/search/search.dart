@@ -1,11 +1,15 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:egvu/PlayWidget/customePlayBackWidget.dart';
+
+
 import 'package:egvu/classes/opneAudio.dart';
 import 'package:egvu/database/hiveModelClass.dart';
+import 'package:egvu/logics/search/search_bloc.dart';
 
 
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -26,22 +30,26 @@ class _SearchState extends State<Search> {
   List<LocalSongs> dbSongs = [];
   List<Audio> allSongs = [];
 
-  searchSongs() async {
-    dbSongs = box.get('songs') as List<LocalSongs>;
-    for (var element in dbSongs) {
-      allSongs.add(Audio.file(element.uri.toString(),
-          metas: Metas(
-            title: element.title,
-            artist: element.artist,
-            id: element.id.toString(),
-          )));
-    }
-  }
+  // searchSongs() async {
+  //   dbSongs = box.get('songs') as List<LocalSongs>;
+  //   for (var element in dbSongs) {
+  //     allSongs.add(Audio.file(element.uri.toString(),
+  //         metas: Metas(
+  //           title: element.title,
+  //           artist: element.artist,
+  //           id: element.id.toString(),
+  //         )),
+
+  //         );
+
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    searchSongs();
+    context.read<SearchBloc>().add(InitEvent());
+    context.read<SearchBloc>().add(SearchValueEvent(searchValue: " "));
   }
 
   @override
@@ -49,28 +57,28 @@ class _SearchState extends State<Search> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    List<Audio> searchTitle = allSongs.where(
-      (element) {
-        return element.metas.title!.toLowerCase().startsWith(
-              search.toLowerCase(),
-            );
-      },
-    ).toList();
+    // List<Audio> searchTitle = allSongs.where(
+    //   (element) {
+    //     return element.metas.title!.toLowerCase().startsWith(
+    //           search.toLowerCase(),
+    //         );
+    //   },
+    // ).toList();
 
-    List<Audio> searchArtist = allSongs.where(
-      (element) {
-        return element.metas.artist!.toLowerCase().startsWith(
-              search.toLowerCase(),
-            );
-      },
-    ).toList();
+    // List<Audio> searchArtist = allSongs.where(
+    //   (element) {
+    //     return element.metas.artist!.toLowerCase().startsWith(
+    //           search.toLowerCase(),
+    //         );
+    //   },
+    // ).toList();
 
-    List<Audio> searchResult = [];
-    if (searchTitle.isNotEmpty) {
-      searchResult = searchTitle;
-    } else {
-      searchResult = searchArtist;
-    }
+    // List<Audio> searchResult = [];
+    // if (searchTitle.isNotEmpty) {
+    //   searchResult = searchTitle;
+    // } else {
+    //   searchResult = searchArtist;
+    // }
 
     return Container(
       decoration: const BoxDecoration(
@@ -122,16 +130,31 @@ class _SearchState extends State<Search> {
                           size: 17.sp,
                         )),
                     onChanged: (value) {
-                      setState(() {
-                        search = value.trim();
-                      });
+                      search = value.trim();
+                      context
+                          .read<SearchBloc>()
+                          .add(SearchValueEvent(searchValue: search));
                     },
                   ),
                 ),
               ),
-              search.isNotEmpty
-                  ? searchResult.isNotEmpty
-                      ? Expanded(
+              BlocBuilder<SearchBloc, SearchState>(
+                builder: (context, state) {
+                  final List<Audio> searchResult =
+                      state.props[0] as List<Audio>;
+
+                  return searchResult.isEmpty || search == ""
+                      ? const Padding(
+                          padding: EdgeInsets.all(30),
+                          child: Text(
+                            "No Result Found",
+                            style: TextStyle(
+                              fontFamily: 'Poppins-Regular',
+                              fontSize: 20,
+                            ),
+                          ),
+                        )
+                      : Expanded(
                           child: ListView.builder(
                               itemCount: searchResult.length,
                               itemBuilder: (context, index) {
@@ -212,18 +235,20 @@ class _SearchState extends State<Search> {
                                       }
                                       return Container();
                                     });
-                              }))
-                      : const Padding(
-                          padding: EdgeInsets.all(30),
-                          child: Text(
-                            "No Result Found",
-                            style: TextStyle(
-                              fontFamily: 'Poppins-Regular',
-                              fontSize: 20,
-                            ),
-                          ),
-                        )
-                  : const SizedBox(),
+                              }));
+                },
+              )
+              // : const Padding(
+              //     padding: EdgeInsets.all(30),
+              //     child: Text(
+              //       "No Result Found",
+              //       style: TextStyle(
+              //         fontFamily: 'Poppins-Regular',
+              //         fontSize: 20,
+              //       ),
+              //     ),
+              //   )
+              // : const SizedBox(),
             ],
           ),
         ),

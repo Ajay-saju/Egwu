@@ -9,14 +9,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-class FavouritesScreen extends StatefulWidget {
-  const FavouritesScreen({Key? key}) : super(key: key);
+class FavouritesScreen extends StatelessWidget {
+  FavouritesScreen({Key? key}) : super(key: key);
 
-  @override
-  State<FavouritesScreen> createState() => _FavouritesScreenState();
-}
-
-class _FavouritesScreenState extends State<FavouritesScreen> {
   List<LocalSongs>? dbSongs = [];
   List<Audio> favSongs = [];
   final box = Boxes.getInstance();

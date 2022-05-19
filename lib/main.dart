@@ -1,7 +1,13 @@
+
+
 import 'package:egvu/database/hiveModelClass.dart';
+import 'package:egvu/logics/playlistremove/playlistremove_cubit.dart';
+import 'package:egvu/logics/search/search_bloc.dart';
+import 'package:egvu/logics/songlist/songlist_cubit.dart';
 
 import 'package:egvu/spashScreen/splashscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -27,22 +33,28 @@ Future main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (ctx) => MaterialApp(
-       
-        debugShowCheckedModeBanner: false,
-        
-        theme: ThemeData(
-          primarySwatch: Colors.green,
+    return  MultiBlocProvider(
+       providers: [
+         BlocProvider(create: (context)=>SearchBloc(),),
+         BlocProvider(create: (context)=>PlaylistremoveCubit(),),
+         BlocProvider(create: (context)=>SonglistCubit())
+         
+       ],
+      
+      child: ScreenUtilInit(
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (ctx) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          home: const SplashScreen(),
         ),
-        home: const SplashScreen(),
+        designSize: const Size(286.86614173, 619.84251969),
       ),
-      designSize: const Size(286.86614173, 619.84251969),
     );
   }
 }
