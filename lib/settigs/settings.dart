@@ -1,27 +1,19 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:egvu/database/hiveModelClass.dart';
+import 'package:egvu/logics/settings/settings_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 
 import 'package:share_plus/share_plus.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class SettingsScreen extends StatelessWidget {
+  SettingsScreen({Key? key}) : super(key: key);
 
-  @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
   AssetsAudioPlayer myAudio = AssetsAudioPlayer();
   bool _toggled =
       Hive.box<StoreNotification>(storeBoxname).getAt(0)!.isNotificationOn;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,52 +41,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               ),
-              SwitchListTile(
-                  title: Text(
-                    'Notifications',
-                    style: TextStyle(
+              BlocBuilder<SettingsCubit, SettingsState>(
+                builder: (context, state) {
+                  return SwitchListTile(
+                      title: Text(
+                        'Notifications',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                            fontFamily: 'Poppins-Regular'),
+                      ),
+                      secondary: Icon(
+                        state.noti
+                            ? Icons.notifications
+                            : Icons.notifications_off_outlined,
                         color: Colors.white,
-                        fontSize: 14.sp,
-                        fontFamily: 'Poppins-Regular'),
-                  ),
-                  secondary: Icon(
-                    _toggled
-                        ? Icons.notifications
-                        : Icons.notifications_off_outlined,
-                    color: Colors.white,
-                  ),
-                  value: _toggled,
-                  onChanged: (bool value) {
-                    Hive.box<StoreNotification>(storeBoxname)
-                        .putAt(0, StoreNotification(isNotificationOn: value));
+                      ),
+                      value: _toggled,
+                      onChanged: (value) {
+                        Hive.box<StoreNotification>(storeBoxname).putAt(
+                            0, StoreNotification(isNotificationOn: value));
 
-                    setState(() {
-                      _toggled = Hive.box<StoreNotification>(storeBoxname)
-                          .getAt(0)!
-                          .isNotificationOn;
+                        // setState(() {
+                        _toggled = Hive.box<StoreNotification>(storeBoxname)
+                                .getAt(0)!
+                                .isNotificationOn;
+                        context.read<SettingsCubit>().notifi(value);
+                            
 
-                      if (_toggled == true) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                                duration: Duration(seconds: 1),
-                                content: Text(
-                                  'App need to Restart to see the Changes',
-                                  style:
-                                      TextStyle(fontFamily: 'Poppins-Regular'),
-                                )));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            duration: Duration(seconds: 1),
-                            content: Text(
-                              'App need to Restart to see the Changes',
-                              style: TextStyle(fontFamily: 'Poppins'),
+                        if (_toggled == true) {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  duration: Duration(seconds: 1),
+                                  content: Text(
+                                    'App need to Restart to see the Changes',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Regular'),
+                                  )));
+                        } else {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              duration: Duration(seconds: 1),
+                              content: Text(
+                                'App need to Restart to see the Changes',
+                                style: TextStyle(fontFamily: 'Poppins'),
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                    });
-                  }),
+                          );
+                        }
+                        // });
+                      });
+                },
+              ),
               ListTile(
                 onTap: () {
                   Share.share(

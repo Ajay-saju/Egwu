@@ -79,13 +79,14 @@ int? songIndex;
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FutureBuilder<List<SongModel>>(
-                      future: audioQuery.querySongs(
-                        uriType: UriType.EXTERNAL,
-                        sortType: null,
-                        orderType: OrderType.ASC_OR_SMALLER,
-                        ignoreCase: true,
-                      ),
+                  FutureBuilder<List<LocalSongs>>(
+                      // future: audioQuery.querySongs(
+                      //   uriType: UriType.EXTERNAL,
+                      //   sortType: null,
+                      //   orderType: OrderType.ASC_OR_SMALLER,
+                      //   ignoreCase: true,
+                      // ),
+
                       builder: (context, item) {
                         if (finalMusic.isEmpty) {
                           return const Center(

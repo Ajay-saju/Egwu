@@ -3,6 +3,7 @@
 import 'package:egvu/database/hiveModelClass.dart';
 import 'package:egvu/logics/playlistremove/playlistremove_cubit.dart';
 import 'package:egvu/logics/search/search_bloc.dart';
+import 'package:egvu/logics/settings/settings_cubit.dart';
 import 'package:egvu/logics/songlist/songlist_cubit.dart';
 
 import 'package:egvu/spashScreen/splashscreen.dart';
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
        providers: [
          BlocProvider(create: (context)=>SearchBloc(),),
          BlocProvider(create: (context)=>PlaylistremoveCubit(),),
-         BlocProvider(create: (context)=>SonglistCubit())
+         BlocProvider(create: (context)=>SonglistCubit()),
+          BlocProvider(create: (context)=>SettingsCubit())
          
        ],
       

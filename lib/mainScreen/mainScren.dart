@@ -43,7 +43,7 @@ class MainScreen extends StatelessWidget {
         fullSongs: finalSong!,
       ),
       const PlayList(),
-      const SettingsScreen(),
+       SettingsScreen(),
     ];
 
     return Scaffold(

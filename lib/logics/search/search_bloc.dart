@@ -30,29 +30,33 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc() : super(SearchInitial(searchList: allSongs)) {
     on<SearchValueEvent>((event, emit) {
 
+      
+
 
       List<Audio> searchTitle = allSongs.where(
         (element) {
           return element.metas.title!.toLowerCase().startsWith(
+                event.searchValue!.toLowerCase() 
+              ) || element.metas.artist!.toLowerCase().startsWith(
                 event.searchValue!.toLowerCase(),
               );
         },
       ).toList();
 
-      List<Audio> searchArtist = allSongs.where(
-        (element) {
-          return element.metas.artist!.toLowerCase().startsWith(
-                event.searchValue!.toLowerCase(),
-              );
-        },
-      ).toList();
+      // List<Audio> searchArtist = allSongs.where(
+      //   (element) {
+      //     return element.metas.artist!.toLowerCase().startsWith(
+      //           event.searchValue!.toLowerCase(),
+      //         );
+      //   },
+      // ).toList();
 
       List<Audio> searchResult = [];
-      if (searchTitle.isNotEmpty) {
+      // if (searchTitle.isNotEmpty) {
         searchResult = searchTitle;
-      } else {
-        searchResult = searchArtist;
-      }
+      // } else {
+      //   searchResult = searchArtist;
+      // }
       emit(SearchInitial(searchList: searchResult));
     });
 
@@ -62,3 +66,4 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     });
   }
 }
+  
